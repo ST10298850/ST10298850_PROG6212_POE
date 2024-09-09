@@ -27,6 +27,15 @@ namespace ST10298850_PROG6212_POE.Controllers
         {
             return View();
         }
+        public IActionResult VerificationPageView()
+        {
+            return View();
+        }
+
+        public IActionResult ApprovalPageView()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

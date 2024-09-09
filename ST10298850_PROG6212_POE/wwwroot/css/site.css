@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
 }
 
 .login-page {
@@ -87,34 +88,34 @@ html, body {
 }
 
 
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-}
-
+/* Main Content Area */
 .claim-main-content {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: stretch; /* Stretch items to fill the height */
-    height: calc(100vh - 60px); /* Adjust for any fixed header height, if needed */
-    background: #FFFFFF;
+    justify-content: center;
+    align-items: center; /* Align items vertically */
+    min-height: 100vh; /* Fill the entire viewport height */
+    background: #BDD4DE; /* Update background color */
     padding: 20px;
     box-sizing: border-box;
 }
 
 .claim-container {
     display: flex;
-    flex: 1;
-    gap: 20px; /* Space between columns */
+    justify-content: space-between;
+    gap: 40px; /* Space between columns */
+    width: 100%;
+    max-width: 1200px; /* Center the content */
+    background-color: #BDD4DE;
 }
 
+/* Claim Form and History Column Styling */
 .claim-form-column, .claim-history-column {
     flex: 1;
     padding: 20px;
-    box-sizing: border-box;
+    background: #FFFFFF; /* White background for sections */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
 }
 
 .claim-form-column {
@@ -123,27 +124,36 @@ html, body {
 
 .claim-history-column {
     margin-left: 20px;
-    border-left: 2px solid #000000;
+    border-left: 2px solid #000000; /* Black divider between form and history */
 }
 
-.claim-form, .claim-history {
-    background: #9AC0C9;
-    border-radius: 5px;
-    padding: 20px;
-    height: 100%; /* Ensure content fills the column */
+/* Claim Form Styling */
+.claim-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between form fields */
 }
 
-    .claim-form input {
+    .claim-form input, .claim-form button {
         width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #CCC;
+        border-radius: 5px;
     }
 
-.btn-signin {
+/* Claim History Styling */
+.claim-history {
     background: #FFFFFF;
-    border: none;
     border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
+    padding: 20px;
+    height: 100%;
 }
+
+    .claim-history h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
 .claim-history-table {
     display: flex;
@@ -152,9 +162,221 @@ html, body {
     width: 100%;
 }
 
-.claim-id, .claim-date, .approval-status {
+.claim-id, .claim-date, .approval-status, .comments {
     width: 33%;
     text-align: center;
     font-weight: bold;
     padding: 10px;
+}
+
+/* Button Styling */
+.btn-signin {
+    background: #9AC0C9;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #000000;
+}
+
+/* Calculation Display Styling */
+.calculation-display p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+
+/*VERIFICATION PAGE CSS STYLE SHEETS*/
+/* VERIFICATION PAGE SPECIFIC CSS */
+.verification-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFFFFF;
+    padding: 20px;
+}
+
+.verification-content-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1000px;
+    margin-top: 20px;
+}
+
+.verification-claim-list-box {
+    width: 60%;
+}
+
+.verification-claim-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+    .verification-claim-table th,
+    .verification-claim-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .verification-claim-table th {
+        background-color: #f2f2f2;
+    }
+
+.verification-lecturer-info {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* Regular & Overtime Information */
+.verification-info-item {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.verification-info-value {
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+/* Line Dividers */
+.verification-line-divider-1,
+.verification-line-divider-2 {
+    width: 100%;
+    max-width: 1200px;
+    height: 1px;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+/* Buttons */
+.verification-approve-group,
+.verification-reject-group {
+    margin-top: 20px;
+}
+
+.verification-approve-button,
+.verification-reject-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #FFF;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.verification-reject-button {
+    background-color: #f44336;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .verification-content-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .verification-claim-list-box,
+    .verification-lecturer-info {
+        width: 100%;
+    }
+}
+
+/* Approval Page CSS Style Sheets */
+.approval-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #FFFFFF;
+    padding: 20px;
+}
+
+.approval-content-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+}
+
+.approval-claim-list-box {
+    width: 60%;
+}
+
+.approval-claim-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+    .approval-claim-table th,
+    .approval-claim-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .approval-claim-table th {
+        background-color: #f2f2f2;
+    }
+
+.approval-lecturer-info {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+/* Line Dividers */
+.approval-line-divider-1,
+.approval-line-divider-2,
+.approval-line-divider-3{
+    width: 100%;
+    max-width: 1200px;
+    height: 1px;
+    background-color: #000;
+    margin: 20px 0;
+}
+
+.approval-approve-group,
+.approval-reject-group {
+    margin-top: 20px;
+}
+
+.approval-approve-button,
+.approval-reject-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #FFF;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.approval-reject-button {
+    background-color: #f44336;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .approval-content-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .approval-claim-list-box,
+    .approval-lecturer-info {
+        width: 100%;
+    }
 }
