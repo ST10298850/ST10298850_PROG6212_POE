@@ -1,5 +1,81 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@{
+    ViewData["Title"] = "Claim Page";
+}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Page</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- Add Navbar Content Here -->
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="claim-main-content">
+        <div class="claim-container">
+            <!-- Left Column: Claim Form -->
+            <div class="claim-form-column">
+                <div class="claim-form">
+                    <!-- Hours Worked -->
+                    <div class="hours-worked">
+                        <label for="hours">Hours Worked:</label>
+                        <input type="text" id="hours" class="form-control">
+                    </div>
+
+                    <!-- Overtime Worked -->
+                    <div class="overtime-worked">
+                        <label for="overtime">Overtime Worked:</label>
+                        <input type="text" id="overtime" class="form-control">
+                    </div>
+
+                    <!-- Document Name -->
+                    <div class="document-display">
+                        <label for="document">Document Name:</label>
+                        <input type="text" id="document" class="form-control">
+                    </div>
+
+                    <!-- Upload Document Button -->
+                    <div class="upload-doc">
+                        <button class="btn-signin">Upload Document</button>
+                    </div>
+
+                    <!-- Calculate Claim Button -->
+                    <div class="calculate-claim">
+                        <button class="btn-signin">Calculate Claim</button>
+                    </div>
+
+                    <!-- Submit Claim Button -->
+                    <div class="submit-claim">
+                        <button class="btn-signin">Submit Claim</button>
+                    </div>
+
+                    <!-- Calculation Display -->
+                    <div class="calculation-display">
+                        <p>Regular Pay: </p>
+                        <p>Overtime Pay: </p>
+                        <p>Total Pay: </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Claim History -->
+            <div class="claim-history-column">
+                <div class="claim-history">
+                    <h2>Claim History</h2>
+                    <div class="claim-history-table">
+                        <div class="claim-id">Claim ID</div>
+                        <div class="claim-date">Claim Date</div>
+                        <div class="approval-status">Approval Status</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
