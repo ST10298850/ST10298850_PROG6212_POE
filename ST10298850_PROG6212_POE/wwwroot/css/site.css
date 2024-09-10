@@ -32,10 +32,9 @@ html, body {
 }
 
 .username-label, .password-label {
-    font-family: 'Inria Sans';
     font-weight: 600;
-    font-size: 24px;
-    color: #FFFFFF;
+    font-size: 20px;
+    color: #000000;
     margin-bottom: 10px;
 }
 
@@ -49,8 +48,8 @@ html, body {
 }
 
 .form-control {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 60%;
     border: none;
     background: #FFFFFF;
     padding-left: 10px;
@@ -79,34 +78,38 @@ html, body {
 }
 
 .sign-in-text {
-    font-family: 'Inria Sans';
     font-weight: 600;
-    font-size: 24px;
+    font-size: 20px;
     color: #000000;
     border: none;
     background: none;
 }
-
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
 
 /* Main Content Area */
 .claim-main-content {
     display: flex;
-    flex-direction: row;
     justify-content: center;
-    align-items: center; /* Align items vertically */
-    min-height: 100vh; /* Fill the entire viewport height */
-    background: #BDD4DE; /* Update background color */
-    padding: 20px;
-    box-sizing: border-box;
+    align-items: flex-start;
+    padding: 40px 20px;
+    background-color: #9AC0C9;
+    min-height: 100vh;
 }
 
 .claim-container {
     display: flex;
     justify-content: space-between;
-    gap: 40px; /* Space between columns */
+    gap: 20px; /* Adjusted to ensure space between columns */
     width: 100%;
     max-width: 1200px; /* Center the content */
-    background-color: #BDD4DE;
+    background-color: transparent;
+    align-items: stretch; /* Ensure equal height for columns */
 }
 
 /* Claim Form and History Column Styling */
@@ -116,84 +119,111 @@ html, body {
     background: #FFFFFF; /* White background for sections */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Ensure space between items in columns */
 }
 
 .claim-form-column {
-    margin-right: 20px;
+    max-width: 550px;
 }
 
 .claim-history-column {
-    margin-left: 20px;
-    border-left: 2px solid #000000; /* Black divider between form and history */
+    max-width: 550px;
 }
 
 /* Claim Form Styling */
 .claim-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Space between form fields */
+    gap: 20px;
 }
 
-    .claim-form input, .claim-form button {
-        width: 100%;
-        padding: 10px;
+    .claim-form label {
+        font-weight: bold;
         font-size: 16px;
-        border: 1px solid #CCC;
-        border-radius: 5px;
     }
+
+    .claim-form input {
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .claim-form button {
+        background-color: #6BA3B5;
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .claim-form button:hover {
+            background-color: #4E8697;
+        }
+
+/* Calculation Display Styling */
+.calculation-display p {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #333;
+}
 
 /* Claim History Styling */
 .claim-history {
-    background: #FFFFFF;
-    border-radius: 5px;
-    padding: 20px;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
     .claim-history h2 {
         text-align: center;
-        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
     }
 
 .claim-history-table {
-    display: flex;
-    justify-content: space-between;
-    border-collapse: collapse;
     width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #f9f9f9; /* Set background color to gray */
 }
 
-.claim-id, .claim-date, .approval-status, .comments {
-    width: 33%;
-    text-align: center;
-    font-weight: bold;
-    padding: 10px;
-}
+    .claim-history-table th,
+    .claim-history-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        background-color: #f9f9f9; /* Set background color to gray */
+    }
 
-/* Button Styling */
-.btn-signin {
-    background: #9AC0C9;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    color: #000000;
-}
+    .claim-history-table th {
+        background-color: #f2f2f2;
+    }
 
-/* Calculation Display Styling */
-.calculation-display p {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .claim-container {
+        flex-direction: column;
+        gap: 20px;
+    }
 
+    .claim-form-column, .claim-history-column {
+        max-width: 100%;
+    }
+}
 
 /*VERIFICATION PAGE CSS STYLE SHEETS*/
-/* VERIFICATION PAGE SPECIFIC CSS */
 .verification-page {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #FFFFFF;
+    background-color: #9AC0C9;
     padding: 20px;
 }
 
@@ -201,18 +231,19 @@ html, body {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1200px;
     margin-top: 20px;
 }
 
 .verification-claim-list-box {
-    width: 60%;
+    width: 50%;
 }
 
 .verification-claim-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    background-color: #f9f9f9; /* Set background color to gray */
 }
 
     .verification-claim-table th,
@@ -220,6 +251,7 @@ html, body {
         padding: 10px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        background-color: #f9f9f9;/* Set background color to gray */
     }
 
     .verification-claim-table th {
@@ -227,7 +259,7 @@ html, body {
     }
 
 .verification-lecturer-info {
-    width: 35%;
+    width: 45%;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -248,8 +280,7 @@ html, body {
 }
 
 /* Line Dividers */
-.verification-line-divider-1,
-.verification-line-divider-2 {
+.verification-line-divider {
     width: 100%;
     max-width: 1200px;
     height: 1px;
@@ -295,7 +326,7 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #FFFFFF;
+    background-color: #9AC0C9;
     padding: 20px;
 }
 
@@ -307,48 +338,73 @@ html, body {
     margin-top: 20px;
 }
 
+/* Adjusted widths for better balance */
 .approval-claim-list-box {
-    width: 60%;
+    width: 50%;
 }
 
+.approval-lecturer-info {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background-color: #f9f9f9; /* Slightly darker background */
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow */
+}
+
+/* Claim Table Styling */
 .approval-claim-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow */
 }
 
     .approval-claim-table th,
     .approval-claim-table td {
         padding: 10px;
         text-align: left;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid #ccc; /* Darker border for better structure */
+        background-color: #f9f9f9;
     }
 
     .approval-claim-table th {
         background-color: #f2f2f2;
     }
 
-.approval-lecturer-info {
-    width: 35%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-}
+
+    /* Hover effect for table rows */
+    .approval-claim-table tr:hover {
+        background-color: #e0e0e0;
+        cursor: pointer;
+    }
 
 /* Line Dividers */
-.approval-line-divider-1,
-.approval-line-divider-2,
-.approval-line-divider-3{
+.approval-line-divider {
     width: 100%;
     max-width: 1200px;
     height: 1px;
     background-color: #000;
-    margin: 20px 0;
+    margin: 20px 0; /* Increased margin for better spacing */
 }
 
+/* Lecturer Info Items */
+.approval-info-item {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1rem; /* Consistent font size */
+}
+
+.approval-info-value {
+    margin-left: 10px;
+    font-weight: normal;
+    font-size: 1rem; /* Consistent font size */
+}
+
+/* Approve and Reject Buttons */
 .approval-approve-group,
 .approval-reject-group {
     margin-top: 20px;
@@ -362,11 +418,23 @@ html, body {
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.2s ease; /* Smooth transitions */
 }
 
 .approval-reject-button {
     background-color: #f44336;
 }
+
+    /* Hover and Active States for Buttons */
+    .approval-approve-button:hover,
+    .approval-reject-button:hover {
+        opacity: 0.8;
+    }
+
+    .approval-approve-button:active,
+    .approval-reject-button:active {
+        transform: scale(0.98);
+    }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -378,5 +446,13 @@ html, body {
     .approval-claim-list-box,
     .approval-lecturer-info {
         width: 100%;
+    }
+
+    /* Stack buttons on mobile */
+    .approval-approve-group,
+    .approval-reject-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
 }

@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Claim Page";
-}<!DOCTYPE html>
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,35 +24,35 @@
             <div class="claim-form-column">
                 <div class="claim-form">
                     <!-- Hours Worked -->
-                    <div class="hours-worked">
+                    <div class="form-group">
                         <label for="hours">Hours Worked:</label>
                         <input type="text" id="hours" class="form-control">
                     </div>
 
                     <!-- Overtime Worked -->
-                    <div class="overtime-worked">
+                    <div class="form-group">
                         <label for="overtime">Overtime Worked:</label>
                         <input type="text" id="overtime" class="form-control">
                     </div>
 
                     <!-- Document Name -->
-                    <div class="document-display">
+                    <div class="form-group">
                         <label for="document">Document Name:</label>
                         <input type="text" id="document" class="form-control">
                     </div>
 
                     <!-- Upload Document Button -->
-                    <div class="upload-doc">
+                    <div class="form-group">
                         <button class="btn-signin">Upload Document</button>
                     </div>
 
                     <!-- Calculate Claim Button -->
-                    <div class="calculate-claim">
+                    <div class="form-group">
                         <button class="btn-signin">Calculate Claim</button>
                     </div>
 
                     <!-- Submit Claim Button -->
-                    <div class="submit-claim">
+                    <div class="form-group">
                         <button class="btn-signin">Submit Claim</button>
                     </div>
 
@@ -68,12 +69,31 @@
             <div class="claim-history-column">
                 <div class="claim-history">
                     <h2>Claim History</h2>
-                    <div class="claim-history-table">
-                        <div class="claim-id">Claim ID</div>
-                        <div class="claim-date">Claim Date</div>
-                        <div class="approval-status">Approval Status</div>
-                        <div class="comments">Comments</div>
-                    </div>
+                        <table class="claim-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Claim ID</th>
+                                    <th>Claim Date</th>
+                                    <th>Approval Status</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>12345</td>
+                                    <td>2024-09-01</td>
+                                    <td>Pending</td>
+                                    <td>No Comment</td>
+                                </tr>
+                                <tr>
+                                    <td>12346</td>
+                                    <td>2024-09-05</td>
+                                    <td>Approved</td>
+                                    <td>No Comment</td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
                 </div>
             </div>
         </div>
