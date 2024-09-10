@@ -1,1 +1,3 @@
 # ST10298850_PROG6212_POE
+
+The **Contract Monthly Claim System (CMCS)** is a web-based application designed to streamline the process of submitting and reviewing monthly claims for Independent Contractor (IC) lecturers. The system allows lecturers to submit claims for hours worked, upload supporting documents, and track the status of their claims. Coordinators review and approve claims initially, followed by final approval from Academic Managers. The application provides a user-friendly interface with clear functionality, ensuring that claims are efficiently processed, approved, or rejected while maintaining transparency throughout the claim lifecycle.
