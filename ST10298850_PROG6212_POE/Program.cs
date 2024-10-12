@@ -25,7 +25,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
 //--------------------------------------------------------REFERENCES--------------------------------------------------------
 // Microsoft. (2023). Introduction to ASP.NET Core. [online] Available at: https://learn.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core?view=aspnetcore-8.0 [Accessed 10 September 2024].
 
