@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
+using ST10298850_PROG6212_POE.Models;  // This is correct
 
 namespace ST10298850_PROG6212_POE.Models
 {
@@ -10,7 +10,7 @@ namespace ST10298850_PROG6212_POE.Models
 
         [Required]
         public int ClaimId { get; set; }
-        public ClaimModel Claim { get; set; }
+        public LecturerClaimModel Claim { get; set; }
 
         public bool IsApproved { get; set; }
         public DateTime ApprovalDate { get; set; }

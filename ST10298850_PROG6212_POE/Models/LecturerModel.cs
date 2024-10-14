@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
+using ST10298850_PROG6212_POE.Models;  
 
 namespace ST10298850_PROG6212_POE.Models
 {
@@ -13,6 +13,6 @@ namespace ST10298850_PROG6212_POE.Models
 
         public string Department { get; set; }
 
-        public ICollection<Claim> Claims { get; set; }
+        public ICollection<LecturerClaimModel> Claims { get; set; }
     }
 }
