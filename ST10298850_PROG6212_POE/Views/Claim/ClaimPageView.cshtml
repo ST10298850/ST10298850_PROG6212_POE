@@ -1,0 +1,102 @@
+﻿@{
+    ViewData["Title"] = "Claim Page";
+    var lecturerId = ViewBag.LecturerId ?? 0;
+    var claims = ViewBag.Claims as IEnumerable<dynamic>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claim Page</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- Add Navbar Content Here -->
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="claim-main-content">
+        <div class="claim-container">
+            <!-- Left Column: Claim Form -->
+            <div class="claim-form-column">
+                <div class="claim-form">
+                    <form method="post" asp-action="SubmitClaim" enctype="multipart/form-data">
+                        <!-- Hidden input for LecturerId -->
+                        <input type="hidden" name="lecturerId" value="@lecturerId" />
+                        <!-- Hours Worked -->
+                        <div class="form-group">
+                            <label for="hours">Hours Worked:</label>
+                            <input type="number" id="hours" name="hoursWorked" class="form-control" required>
+                        </div>
+
+                        <!-- Overtime Worked -->
+                        <div class="form-group">
+                            <label for="overtime">Overtime Worked:</label>
+                            <input type="number" id="overtime" name="overtimeWorked" class="form-control" required>
+                        </div>
+
+                        <!-- Document Name -->
+                        <div class="form-group">
+                            <label for="document">Document Name:</label>
+                            <input type="text" id="document" name="documentName" class="form-control" required>
+                        </div>
+
+                        <!-- Upload Document -->
+                        <div class="form-group">
+                            <label for="documentFile">Upload Document:</label>
+                            <input type="file" id="documentFile" name="documentFile" class="form-control" required>
+                        </div>
+
+                        <!-- Submit Claim Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn-signin">Submit Claim</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Claim History -->
+            <div class="claim-history-column">
+                <div class="claim-history">
+                    <h2>Claim History</h2>
+                    <table class="claim-history-table">
+                        <thead>
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Claim Date</th>
+                                <th>Approval Status</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (claims != null && claims.Any())
+                            {
+                                foreach (var claim in claims)
+                                {
+                                    <tr>
+                                        <td>@claim.ClaimId</td>
+                                        <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
+                                        <td>@claim.ApprovalStatus</td>
+                                        <td>@claim.Comments</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4">No claims found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

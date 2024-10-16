@@ -21,7 +21,7 @@ namespace ST10298850_PROG6212_POE.Models
         [Column(TypeName = "decimal(18, 2)")]  // Set precision and scale for OvertimeWorked
         public decimal OvertimeWorked { get; set; }
 
-        public ICollection<DocumentModel> Documents { get; set; }
-        public ApprovalModel Approval { get; set; }
+        public ICollection<DocumentModel> Documents { get; set; } = new List<DocumentModel>(); // Initialize with default value
+        public ApprovalModel Approval { get; set; } = null!; // Use null-forgiving operator
     }
 }

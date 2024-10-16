@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Sign Up";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="signup-page">
+        <div class="signup-form-container">
+            <h2>Sign Up</h2>
+            <form asp-controller="SignUp" asp-action="SignUp" class="signup-form" method="post">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label for="role">Select Role:</label>
+                    <select id="role" name="role" class="form-control" onchange="toggleUserFields()">
+                        <option value="">--Select Role--</option>
+                        <option value="Lecturer">Lecturer</option>
+                        <option value="AcademicManager">Academic Manager</option>
+                        <option value="Coordinator">Coordinator</option>
+                    </select>
+                </div>
+
+                <!-- Common Fields -->
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <!-- Lecturer Specific Fields -->
+                <div id="lecturer-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="department">Department:</label>
+                        <input type="text" id="department" name="department" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Academic Manager Specific Fields -->
+                <div id="academic-manager-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="managerId">Manager ID:</label>
+                        <input type="text" id="managerId" name="managerId" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="faculty">Faculty:</label>
+                        <input type="text" id="faculty" name="faculty" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Coordinator Specific Fields -->
+                <div id="coordinator-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="coordinatorId">Coordinator ID:</label>
+                        <input type="text" id="coordinatorId" name="coordinatorId" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="program">Program:</label>
+                        <input type="text" id="program" name="program" class="form-control">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleUserFields() {
+            var role = document.getElementById("role").value;
+            document.getElementById("lecturer-fields").style.display = "none";
+            document.getElementById("academic-manager-fields").style.display = "none";
+            document.getElementById("coordinator-fields").style.display = "none";
+
+            if (role === "Lecturer") {
+                document.getElementById("lecturer-fields").style.display = "block";
+            } else if (role === "AcademicManager") {
+                document.getElementById("academic-manager-fields").style.display = "block";
+            } else if (role === "Coordinator") {
+                document.getElementById("coordinator-fields").style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

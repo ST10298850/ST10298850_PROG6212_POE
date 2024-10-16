@@ -4,6 +4,59 @@ html, body {
     height: 100%;
     width: 100%;
 }
+/* Sign-Up Page Styling */
+.signup-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #9AC0C9;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.signup-form-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+    .signup-form label {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .signup-form input,
+    .signup-form select {
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .signup-form button {
+        background-color: #6BA3B5;
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .signup-form button:hover {
+            background-color: #4E8697;
+        }
 
 .login-page {
     position: relative;
