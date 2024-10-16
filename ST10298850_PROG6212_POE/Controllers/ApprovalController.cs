@@ -8,5 +8,9 @@ namespace ST10298850_PROG6212_POE.Controllers
         {
             return View();
         }
+        public IActionResult ApprovalPageView()
+        {
+            return View();
+        }
     }
 }

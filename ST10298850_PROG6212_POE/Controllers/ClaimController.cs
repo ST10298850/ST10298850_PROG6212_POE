@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace ST10298850_PROG6212_POE.Controllers
 {
@@ -24,30 +25,40 @@ namespace ST10298850_PROG6212_POE.Controllers
         public IActionResult ClaimPageView()
         {
             int? lecturerId = HttpContext.Session.GetInt32("LecturerId");
-            if (lecturerId.HasValue)
-            {
-                ViewBag.LecturerId = lecturerId.Value;
 
-                // Fetch claims for the signed-in lecturer
-                var claims = _context.Claims
-                    .Where(c => c.LecturerId == lecturerId.Value)
-                    .Select(c => new
-                    {
-                        c.ClaimId,
-                        c.SubmissionDate,
-                        c.Approval.ApprovalStatus,
-                        c.Approval.Comments
-                    })
-                    .ToList();
-
-                ViewBag.Claims = claims;
-            }
-            else
+            if (!lecturerId.HasValue)
             {
-                return RedirectToAction("Index", "Home");
+                TempData["ErrorMessage"] = "Session expired or Lecturer not logged in.";
+                return RedirectToAction("LoginPage"); // or any other action for logging in
             }
+
+            ViewBag.LecturerId = lecturerId.Value; // Pass lecturerId to the view
             return View();
         }
+        [HttpGet]
+        public IActionResult GetClaims()
+        {
+            int? lecturerId = HttpContext.Session.GetInt32("LecturerId");
+            if (!lecturerId.HasValue)
+            {
+                return Unauthorized();
+            }
+
+            var claims = _context.Claims
+                .Where(c => c.LecturerId == lecturerId.Value)
+                .Include(c => c.Approval) // Eager load Approval
+                .Select(c => new
+                {
+                    c.ClaimId,
+                    c.SubmissionDate, // ISO 8601 format, // Format date
+                    Status = c.Approval != null ? c.Approval.Status ?? "Pending" : "Pending", // Handle null Approval
+                    Comments = c.Approval != null ? c.Approval.Comments ?? "No comments" : "No comments", // Handle null Approval
+                })
+                .ToList();
+
+            return Json(claims);
+        }
+
 
         [HttpPost]
         public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, string documentName, IFormFile documentFile)
@@ -58,7 +69,8 @@ namespace ST10298850_PROG6212_POE.Controllers
             if (lecturer == null)
             {
                 _logger.LogWarning("Lecturer not found: {LecturerId}", lecturerId);
-                return NotFound("Lecturer not found");
+                TempData["ErrorMessage"] = "Lecturer not found.";
+                return RedirectToAction("ClaimPageView");
             }
 
             var newClaim = new LecturerClaimModel
@@ -91,8 +103,8 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Model state is invalid.");
-                return View("ClaimPageView");
+                TempData["ErrorMessage"] = "Invalid data.";
+                return RedirectToAction("ClaimPageView");
             }
 
             try
@@ -100,14 +112,16 @@ namespace ST10298850_PROG6212_POE.Controllers
                 _context.Claims?.Add(newClaim);
                 _context.SaveChanges();
                 _logger.LogInformation("Claim saved successfully.");
+                TempData["SuccessMessage"] = "Claim submitted successfully!";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error saving claim.");
-                return StatusCode(500, "Internal server error");
+                TempData["ErrorMessage"] = "Error saving claim.";
             }
 
             return RedirectToAction("ClaimPageView");
         }
     }
 }
+

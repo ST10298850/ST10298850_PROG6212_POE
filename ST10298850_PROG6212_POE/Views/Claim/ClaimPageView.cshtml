@@ -1,8 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Claim Page";
     var lecturerId = ViewBag.LecturerId ?? 0;
-    var claims = ViewBag.Claims as IEnumerable<dynamic>;
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Page</title>
     <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -28,6 +30,7 @@
                     <form method="post" asp-action="SubmitClaim" enctype="multipart/form-data">
                         <!-- Hidden input for LecturerId -->
                         <input type="hidden" name="lecturerId" value="@lecturerId" />
+
                         <!-- Hours Worked -->
                         <div class="form-group">
                             <label for="hours">Hours Worked:</label>
@@ -73,30 +76,56 @@
                                 <th>Comments</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if (claims != null && claims.Any())
-                            {
-                                foreach (var claim in claims)
-                                {
-                                    <tr>
-                                        <td>@claim.ClaimId</td>
-                                        <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
-                                        <td>@claim.ApprovalStatus</td>
-                                        <td>@claim.Comments</td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr>
-                                    <td colspan="4">No claims found.</td>
-                                </tr>
-                            }
+                        <tbody id="claimsTableBody">
+                            <tr>
+                                <td colspan="4">Loading claims...</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function loadClaims() {
+            console.log("Loading claims...");
+            $.ajax({
+                url: '/Claim/GetClaims',
+                method: 'GET',
+                success: function (data) {
+                    var claimsTableBody = $('#claimsTableBody');
+                    claimsTableBody.empty();
+
+                    if (data.length > 0) {
+                        data.forEach(function (claim) {
+                            // Ensure property names match exactly
+                            var claimId = claim.claimId ? claim.claimId : 'Unknown';
+                            var submissionDate = new Date(claim.SubmissionDate);
+                            var formattedDate = isNaN(submissionDate) ? 'Invalid Date' : submissionDate.toLocaleDateString();
+                            var status = claim.Status ? claim.Status : 'Pending'; // Fallback if null or empty
+                            var comments = claim.Comments ? claim.Comments : 'No comments'; // Fallback if null or empty
+
+                            // Append row to the table
+                            claimsTableBody.append('<tr><td>' + claimId + '</td><td>' + formattedDate + '</td><td>' + status + '</td><td>' + comments + '</td></tr>');
+
+                            // Write beneath the table for debugging purposes
+                            $('body').append('<p>ClaimId: ' + claimId + ', Date: ' + formattedDate + ', Status: ' + status + ', Comments: ' + comments + '</p>');
+                        });
+                    } else {
+                        claimsTableBody.append('<tr><td colspan="4">No claims found.</td></tr>');
+                    }
+                },
+                error: function () {
+                    alert('Failed to load claims.');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            console.log("Page loaded.");
+            loadClaims();
+        });
+    </script>
 </body>
 </html>
