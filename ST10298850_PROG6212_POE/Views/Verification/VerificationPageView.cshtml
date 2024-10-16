@@ -1,5 +1,77 @@
 ﻿@{
     ViewData["Title"] = "Verification Page";
+    var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
+}
+
+<div class="verification-page">
+    <!-- Container for the Table and Lecturer Info -->
+    <div class="verification-content-container">
+        <!-- Table for Claims -->
+        <div class="verification-claim-list-box">
+            <table class="verification-claim-table">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Claim Date</th>
+                        <th>Documents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in claims)
+                    {
+                        <tr>
+                            <td>@claim.ClaimId</td>
+                            <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @foreach (var document in claim.Documents)
+                                {
+                                    <span>@document.DocumentName</span>
+
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Lecturer Information -->
+        <div class="verification-lecturer-info">
+            <div class="verification-info-item">Lecturer ID: <span class="verification-info-value">6789</span></div>
+            <div class="verification-info-item">Full Name: <span class="verification-info-value">John Doe</span></div>
+            <div class="verification-info-item">Hourly Rate: <span class="verification-info-value">$50/hr</span></div>
+            <div class="verification-info-item">Department: <span class="verification-info-value">Computer Science</span></div>
+            <div class="verification-info-item">Campus: <span class="verification-info-value">Main Campus</span></div>
+
+            <!-- First Divider -->
+            <div class="verification-line-divider"></div>
+
+            <div class="verification-info-item">Regular Hours Worked: <span class="verification-info-value">40 hrs</span></div>
+            <div class="verification-info-item">Overtime Hours Worked: <span class="verification-info-value">5 hrs</span></div>
+            <div class="verification-info-item">Total Hours Worked: <span class="verification-info-value">45 hrs</span></div>
+
+            <!-- Second Divider -->
+            <div class="verification-line-divider"></div>
+
+            <div class="verification-info-item">Regular Pay: <span class="verification-info-value">$2000</span></div>
+            <div class="verification-info-item">Overtime Pay: <span class="verification-info-value">$250</span></div>
+            <div class="verification-info-item">Total Pay: <span class="verification-info-value">$2250</span></div>
+        </div>
+    </div>
+
+    <!-- Approve/Reject Buttons -->
+    <div class="verification-approve-group">
+        <div class="verification-approve-button">Approve</div>
+    </div>
+
+    <div class="verification-reject-group">
+        <div class="verification-reject-button">Reject</div>
+    </div>
+</div>
+
+@* @{
+    ViewData["Title"] = "Verification Page";
 }
 
 <div class="verification-page">
@@ -63,4 +135,4 @@
     <div class="verification-reject-group">
         <div class="verification-reject-button">Reject</div>
     </div>
-</div>
+</div> *@

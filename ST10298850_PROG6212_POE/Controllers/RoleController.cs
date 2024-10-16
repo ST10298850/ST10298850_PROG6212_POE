@@ -15,11 +15,11 @@ namespace ST10298850_PROG6212_POE.Controllers
             }
             else if (role == "AcademicManager")
             {
-                return RedirectToAction("AcademicManagerPageView");
+                return RedirectToAction("ApprovalPageView");
             }
             else if (role == "Coordinator")
             {
-                return RedirectToAction("CoordinatorPageView");
+                return RedirectToAction("ApprovalPageView");
             }
             else
             {

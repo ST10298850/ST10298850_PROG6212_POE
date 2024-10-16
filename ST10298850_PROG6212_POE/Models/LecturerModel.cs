@@ -15,7 +15,12 @@ namespace ST10298850_PROG6212_POE.Models
 
         [Required]
         public string Email { get; set; } = string.Empty;
+
         public string Department { get; set; } = string.Empty; // Initialize with default value
+
+        // New property for Campus
+        [Required]
+        public string Campus { get; set; } = string.Empty; // Initialize with default value
 
         public ICollection<LecturerClaimModel> Claims { get; set; } = new List<LecturerClaimModel>(); // Initialize with default value
     }

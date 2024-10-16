@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ST10298850_PROG6212_POE.Data;
 
@@ -11,9 +12,11 @@ using ST10298850_PROG6212_POE.Data;
 namespace ST10298850_PROG6212_POE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241016195824_AdjustingDataTypeOfHourlyRate")]
+    partial class AdjustingDataTypeOfHourlyRate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,10 +180,6 @@ namespace ST10298850_PROG6212_POE.Migrations
                         .HasAnnotation("SqlServer:Identity", "10011, 1");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LecturerId"));
-
-                    b.Property<string>("Campus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Department")
                         .IsRequired()
