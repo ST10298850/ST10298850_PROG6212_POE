@@ -35,6 +35,7 @@ namespace ST10298850_PROG6212_POE.Controllers
             ViewBag.LecturerId = lecturerId.Value; // Pass lecturerId to the view
             return View();
         }
+
         [HttpGet]
         public IActionResult GetClaims()
         {
@@ -59,9 +60,8 @@ namespace ST10298850_PROG6212_POE.Controllers
             return Json(claims);
         }
 
-
         [HttpPost]
-        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, string documentName, IFormFile documentFile)
+        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile)
         {
             _logger.LogInformation("SubmitClaim method started.");
 
@@ -78,6 +78,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                 LecturerId = lecturerId,
                 HoursWorked = hoursWorked,
                 OvertimeWorked = overtimeWorked,
+                HourlyRate = hourlyRate, // Add hourly rate to the claim model
                 SubmissionDate = DateTime.Now,
                 Documents = new List<DocumentModel>(),
             };
@@ -124,4 +125,3 @@ namespace ST10298850_PROG6212_POE.Controllers
         }
     }
 }
-
