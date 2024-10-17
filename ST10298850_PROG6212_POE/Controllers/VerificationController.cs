@@ -27,5 +27,62 @@ namespace ST10298850_PROG6212_POE.Controllers
             return View(claims);
         }
 
+        [HttpGet]
+        public IActionResult GetClaimDetails(int id)
+        {
+            // Fetch the claim with the given ID
+            var claim = _context.Claims
+                .Include(c => c.Lecturer) // Include related lecturer
+                .FirstOrDefault(c => c.ClaimId == id);
+
+            if (claim == null)
+            {
+                return NotFound();
+            }
+
+            // Prepare data to return in JSON format
+            var claimDetails = new
+            {
+                LecturerId = claim.Lecturer.LecturerId,
+                FullName = claim.Lecturer.Name,
+                HourlyRate = claim.HourlyRate.ToString("C"), // Format as currency
+                Department = claim.Lecturer.Department,
+                Campus = claim.Lecturer.Campus,
+                HoursWorked = claim.HoursWorked,
+                OvertimeWorked = claim.OvertimeWorked,
+                TotalHours = claim.HoursWorked + claim.OvertimeWorked,
+                RegularPay = (claim.HoursWorked * claim.HourlyRate).ToString("C"),
+                OvertimePay = (claim.OvertimeWorked * (claim.HourlyRate * 1.5M)).ToString("C"), // Assume 1.5x for overtime
+                TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C")
+            };
+
+            // Return the data as JSON
+            return Json(claimDetails);
+        }
+        [HttpPost]
+        public IActionResult ApproveClaim(int id)
+        {
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == id);
+            if (claim != null)
+            {
+                claim.Status = "verified"; // Set the status to verified
+                _context.SaveChanges(); // Save changes to the database
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult RejectClaim(int id)
+        {
+            var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == id);
+            if (claim != null)
+            {
+                claim.Status = "rejected"; // Set the status to rejected
+                _context.SaveChanges(); // Save changes to the database
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }

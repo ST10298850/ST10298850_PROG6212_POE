@@ -47,18 +47,17 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             var claims = _context.Claims
                 .Where(c => c.LecturerId == lecturerId.Value)
-                .Include(c => c.Approval) // Eager load Approval
                 .Select(c => new
                 {
                     c.ClaimId,
-                    c.SubmissionDate, // ISO 8601 format, // Format date
-                    Status = c.Approval != null ? c.Approval.Status ?? "Pending" : "Pending", // Handle null Approval
-                    Comments = c.Approval != null ? c.Approval.Comments ?? "No comments" : "No comments", // Handle null Approval
+                    c.SubmissionDate, // Retrieve SubmissionDate from claims table
+                    c.Status // Retrieve Status from LecturerClaimModel
                 })
                 .ToList();
 
             return Json(claims);
         }
+
 
         [HttpPost]
         public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile)

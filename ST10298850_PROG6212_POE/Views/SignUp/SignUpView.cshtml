@@ -17,7 +17,7 @@
                 <!-- Role Selection -->
                 <div class="form-group">
                     <label for="role">Select Role:</label>
-                    <select id="role" name="role" class="form-control" onchange="toggleUserFields()">
+                    <select id="role" name="role" class="form-control" onchange="toggleUserFields()" required>
                         <option value="">--Select Role--</option>
                         <option value="Lecturer">Lecturer</option>
                         <option value="AcademicManager">Academic Manager</option>
@@ -50,24 +50,16 @@
                 <!-- Academic Manager Specific Fields -->
                 <div id="academic-manager-fields" style="display: none;">
                     <div class="form-group">
-                        <label for="managerId">Manager ID:</label>
-                        <input type="text" id="managerId" name="managerId" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="faculty">Faculty:</label>
-                        <input type="text" id="faculty" name="faculty" class="form-control">
+                        <label for="manager-department">Department:</label>
+                        <input type="text" id="manager-department" name="managerDepartment" class="form-control">
                     </div>
                 </div>
 
                 <!-- Coordinator Specific Fields -->
                 <div id="coordinator-fields" style="display: none;">
                     <div class="form-group">
-                        <label for="coordinatorId">Coordinator ID:</label>
-                        <input type="text" id="coordinatorId" name="coordinatorId" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="program">Program:</label>
-                        <input type="text" id="program" name="program" class="form-control">
+                        <label for="coordinator-department">Department:</label>
+                        <input type="text" id="coordinator-department" name="coordinatorDepartment" class="form-control">
                     </div>
                 </div>
 

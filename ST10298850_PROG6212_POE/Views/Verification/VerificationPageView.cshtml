@@ -9,7 +9,7 @@
         <!-- Table for Claims -->
         <div class="verification-claim-list-box">
             <table class="verification-claim-table">
-                <thead> 
+                <thead>
                     <tr>
                         <th>Claim ID</th>
                         <th>Claim Date</th>
@@ -19,14 +19,13 @@
                 <tbody>
                     @foreach (var claim in claims)
                     {
-                        <tr>
+                        <tr class="claim-row" data-claim-id="@claim.ClaimId">
                             <td>@claim.ClaimId</td>
                             <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
                             <td>
                                 @foreach (var document in claim.Documents)
                                 {
                                     <span>@document.DocumentName</span>
-
                                     <br />
                                 }
                             </td>
@@ -38,101 +37,100 @@
 
         <!-- Lecturer Information -->
         <div class="verification-lecturer-info">
-            <div class="verification-info-item">Lecturer ID: <span class="verification-info-value">6789</span></div>
-            <div class="verification-info-item">Full Name: <span class="verification-info-value">John Doe</span></div>
-            <div class="verification-info-item">Hourly Rate: <span class="verification-info-value">$50/hr</span></div>
-            <div class="verification-info-item">Department: <span class="verification-info-value">Computer Science</span></div>
-            <div class="verification-info-item">Campus: <span class="verification-info-value">Main Campus</span></div>
+            <div class="verification-info-item">Full Name: <span class="verification-info-value" data-field="fullName">NA</span></div>
+            <div class="verification-info-item">Hourly Rate: <span class="verification-info-value" data-field="hourlyRate">NA</span></div>
+            <div class="verification-info-item">Department: <span class="verification-info-value" data-field="department">NA</span></div>
+            <div class="verification-info-item">Campus: <span class="verification-info-value" data-field="campus">NA</span></div>
 
-            <!-- First Divider -->
             <div class="verification-line-divider"></div>
 
-            <div class="verification-info-item">Regular Hours Worked: <span class="verification-info-value">40 hrs</span></div>
-            <div class="verification-info-item">Overtime Hours Worked: <span class="verification-info-value">5 hrs</span></div>
-            <div class="verification-info-item">Total Hours Worked: <span class="verification-info-value">45 hrs</span></div>
+            <div class="verification-info-item">Regular Hours Worked: <span class="verification-info-value" data-field="hoursWorked">NA</span></div>
+            <div class="verification-info-item">Overtime Hours Worked: <span class="verification-info-value" data-field="overtimeWorked">NA</span></div>
+            <div class="verification-info-item">Total Hours Worked: <span class="verification-info-value" data-field="totalHours">NA</span></div>
 
-            <!-- Second Divider -->
             <div class="verification-line-divider"></div>
 
-            <div class="verification-info-item">Regular Pay: <span class="verification-info-value">$2000</span></div>
-            <div class="verification-info-item">Overtime Pay: <span class="verification-info-value">$250</span></div>
-            <div class="verification-info-item">Total Pay: <span class="verification-info-value">$2250</span></div>
+            <div class="verification-info-item">Regular Pay: <span class="verification-info-value" data-field="regularPay">NA</span></div>
+            <div class="verification-info-item">Overtime Pay: <span class="verification-info-value" data-field="overtimePay">NA</span></div>
+            <div class="verification-info-item">Total Pay: <span class="verification-info-value" data-field="totalPay">NA</span></div>
         </div>
     </div>
 
     <!-- Approve/Reject Buttons -->
     <div class="verification-approve-group">
-        <div class="verification-approve-button">Approve</div>
+        <button class="verification-approve-button">Approve</button>
     </div>
 
     <div class="verification-reject-group">
-        <div class="verification-reject-button">Reject</div>
+        <button class="verification-reject-button">Reject</button>
     </div>
 </div>
 
-@* @{
-    ViewData["Title"] = "Verification Page";
-}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Variable to hold the selected claim ID
+        let selectedClaimId = null;
 
-<div class="verification-page">
-    <!-- Container for the Table and Lecturer Info -->
-    <div class="verification-content-container">
-        <!-- Table for Claims -->
-        <div class="verification-claim-list-box">
-            <table class="verification-claim-table">
-                <thead>
-                    <tr>
-                        <th>Claim ID</th>
-                        <th>Claim Date</th>
-                        <th>Documents</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>12345</td>
-                        <td>2024-09-01</td>
-                        <td>Document1.pdf</td>
-                    </tr>
-                    <tr>
-                        <td>12346</td>
-                        <td>2024-09-05</td>
-                        <td>Document2.pdf</td>
-                    </tr>
-                    <!-- Add more rows as needed -->
-                </tbody>
-            </table>
-        </div>
+        // Handle row click to set selected claim
+        $(".claim-row").click(function () {
+            selectedClaimId = $(this).data("claim-id");
 
-        <!-- Lecturer Information -->
-        <div class="verification-lecturer-info">
-            <div class="verification-info-item">Lecturer ID: <span class="verification-info-value">6789</span></div>
-            <div class="verification-info-item">Full Name: <span class="verification-info-value">John Doe</span></div>
-            <div class="verification-info-item">Hourly Rate: <span class="verification-info-value">$50/hr</span></div>
-            <div class="verification-info-item">Department: <span class="verification-info-value">Computer Science</span></div>
-            <div class="verification-info-item">Campus: <span class="verification-info-value">Main Campus</span></div>
+            // Send AJAX request to fetch claim details
+            $.ajax({
+                url: '@Url.Action("GetClaimDetails", "Verification")',
+                type: 'GET',
+                data: { id: selectedClaimId },
+                success: function (data) {
+                    $(".verification-info-item span.verification-info-value").each(function () {
+                        var key = $(this).data("field");
+                        $(this).text(data[key] || "NA");
+                    });
+                },
+                error: function (error) {
+                    console.log("Error fetching claim details:", error);
+                }
+            });
+        });
 
-            <!-- First Divider -->
-            <div class="verification-line-divider"></div>
+        // Approve button click handler
+        $(".verification-approve-button").click(function () {
+            if (selectedClaimId) {
+                $.ajax({
+                    url: '@Url.Action("ApproveClaim", "Verification")', // Your approve action
+                    type: 'POST',
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim approved!");
+                        location.reload(); // Reload the page or update the UI as necessary
+                    },
+                    error: function (error) {
+                        console.log("Error approving claim:", error);
+                    }
+                });
+            } else {
+                alert("Please select a claim to approve.");
+            }
+        });
 
-            <div class="verification-info-item">Regular Hours Worked: <span class="verification-info-value">40 hrs</span></div>
-            <div class="verification-info-item">Overtime Hours Worked: <span class="verification-info-value">5 hrs</span></div>
-            <div class="verification-info-item">Total Hours Worked: <span class="verification-info-value">45 hrs</span></div>
-
-            <!-- Second Divider -->
-            <div class="verification-line-divider"></div>
-
-            <div class="verification-info-item">Regular Pay: <span class="verification-info-value">$2000</span></div>
-            <div class="verification-info-item">Overtime Pay: <span class="verification-info-value">$250</span></div>
-            <div class="verification-info-item">Total Pay: <span class="verification-info-value">$2250</span></div>
-        </div>
-    </div>
-
-    <!-- Approve/Reject Buttons -->
-    <div class="verification-approve-group">
-        <div class="verification-approve-button">Approve</div>
-    </div>
-
-    <div class="verification-reject-group">
-        <div class="verification-reject-button">Reject</div>
-    </div>
-</div> *@
+        // Reject button click handler
+        $(".verification-reject-button").click(function () {
+            if (selectedClaimId) {
+                $.ajax({
+                    url: '@Url.Action("RejectClaim", "Verification")', // Your reject action
+                    type: 'POST',
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim rejected!");
+                        location.reload(); // Reload the page or update the UI as necessary
+                    },
+                    error: function (error) {
+                        console.log("Error rejecting claim:", error);
+                    }
+                });
+            } else {
+                alert("Please select a claim to reject.");
+            }
+        });
+    });
+</script>

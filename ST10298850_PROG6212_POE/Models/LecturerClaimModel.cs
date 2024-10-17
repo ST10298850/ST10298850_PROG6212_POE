@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ST10298850_PROG6212_POE.Models;
+using System.Collections.Generic;
 
 namespace ST10298850_PROG6212_POE.Models
 {
@@ -15,18 +15,25 @@ namespace ST10298850_PROG6212_POE.Models
 
         public DateTime SubmissionDate { get; set; }
 
-        [Column(TypeName = "decimal(18, 2)")]  // Set precision and scale for HoursWorked
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal HoursWorked { get; set; }
 
-        [Column(TypeName = "decimal(18, 2)")]  // Set precision and scale for OvertimeWorked
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal OvertimeWorked { get; set; }
-        // New Status property
+
+        [Required]
         public string Status { get; set; } = "Pending";
 
-        [Column(TypeName = "decimal(18, 2)")]  // Set precision and scale for HourlyRate
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal HourlyRate { get; set; }
 
-        public ICollection<DocumentModel> Documents { get; set; } = new List<DocumentModel>(); // Initialize with default value
-        public ApprovalModel Approval { get; set; } = null!; // Use null-forgiving operator
+        // New property for CoordinatorId
+        public int? CoordinatorId { get; set; }  // Nullable if a claim can exist without a coordinator
+
+        public ICollection<DocumentModel> Documents { get; set; } = new List<DocumentModel>();
+        public ApprovalModel Approval { get; set; } = null!;
+
+        // New navigation property
+        public CoordinatorModel? Coordinator { get; set; }
     }
 }

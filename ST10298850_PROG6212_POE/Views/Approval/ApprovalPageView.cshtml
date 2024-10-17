@@ -1,0 +1,258 @@
+﻿@{
+    ViewData["Title"] = "Approval Page";
+    var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
+}
+
+<div class="approval-page">
+    <!-- Container for the Table and Lecturer Info -->
+    <div class="approval-content-container">
+        <!-- Table for Claims -->
+        <div class="approval-claim-list-box">
+            <table class="approval-claim-table">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Claim Date</th>
+                        <th>Documents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in claims)
+                    {
+                        <tr class="claim-row" data-claim-id="@claim.ClaimId">
+                            <td>@claim.ClaimId</td>
+                            <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @foreach (var document in claim.Documents)
+                                {
+                                    <span>@document.DocumentName</span>
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Lecturer Information -->
+        <div class="approval-lecturer-info">
+            <div class="approval-info-item">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
+            <div class="approval-info-item">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
+            <div class="approval-info-item">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
+            <div class="approval-info-item">Department: <span class="approval-info-value" data-field="department">NA</span></div>
+            <div class="approval-info-item">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
+
+            <!-- First Divider -->
+            <div class="approval-line-divider"></div>
+
+            <div class="approval-info-item">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
+            <div class="approval-info-item">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
+            <div class="approval-info-item">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
+
+            <!-- Second Divider -->
+            <div class="approval-line-divider"></div>
+
+            <div class="approval-info-item">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
+            <div class="approval-info-item">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
+            <div class="approval-info-item">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
+
+            <!-- Additional Manager Information -->
+            <div class="approval-line-divider"></div>
+            <div class="approval-info-item">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
+            <div class="approval-info-item">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
+            <div class="approval-info-item">Verification Date: <span class="approval-info-value" data-field="InteractionDate">NA</span></div>
+        </div>
+    </div>
+
+    <!-- Approve/Reject Buttons -->
+    <div class="approval-approve-group">
+        <button class="approval-approve-button">Approve</button>
+    </div>
+
+    <div class="approval-reject-group">
+        <button class="approval-reject-button">Reject</button>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Variable to hold the selected claim ID
+        let selectedClaimId = null;
+
+        // Handle row click to set selected claim
+        $(".claim-row").click(function () {
+            selectedClaimId = $(this).data("claim-id");
+
+            // Send AJAX request to fetch claim details
+            $.ajax({
+                url: '@Url.Action("GetClaimDetailsApproved", "Approval")', // Updated action name
+                type: 'GET',
+                data: { claimId: selectedClaimId }, // Send the claim ID
+                success: function (data) {
+                    $(".approval-info-item span.approval-info-value").each(function () {
+                        var key = $(this).data("field");
+                        $(this).text(data[key] || "NA");
+                    });
+                },
+                error: function (error) {
+                    console.log("Error fetching claim details:", error);
+                }
+            });
+        });
+
+        // Approve button click handler
+        $(".approval-approve-button").click(function () {
+            if (selectedClaimId) {
+                $.ajax({
+                    url: '@Url.Action("ApproveClaim", "Approval")', // Your approve action
+                    type: 'POST',
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim approved!");
+                        location.reload(); // Reload the page or update the UI as necessary
+                    },
+                    error: function (error) {
+                        console.log("Error approving claim:", error);
+                    }
+                });
+            } else {
+                alert("Please select a claim to approve.");
+            }
+        });
+
+        // Reject button click handler
+        $(".approval-reject-button").click(function () {
+            if (selectedClaimId) {
+                $.ajax({
+                    url: '@Url.Action("RejectClaim", "Approval")', // Your reject action
+                    type: 'POST',
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim rejected!");
+                        location.reload(); // Reload the page or update the UI as necessary
+                    },
+                    error: function (error) {
+                        console.log("Error rejecting claim:", error);
+                    }
+                });
+            } else {
+                alert("Please select a claim to reject.");
+            }
+        });
+    });
+</script>
+@* @{
+    ViewData["Title"] = "Approval Page";
+    var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>; // Assuming you're passing similar data
+}
+
+<div class="approval-page">
+    <!-- Container for the Table and Lecturer Info -->
+    <div class="approval-content-container">
+        <!-- Table for Claims -->
+        <div class="approval-claim-list-box">
+            <table class="approval-claim-table">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>Claim Date</th>
+                        <th>Documents</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var claim in Model)
+                    {
+                        <tr class="claim-row" data-claim-id="@claim.ClaimId">
+                            <td>@claim.ClaimId</td>
+                            <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @foreach (var document in claim.Documents)
+                                {
+                                    <span>@document.DocumentName</span>
+                                    <br />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Lecturer Information -->
+        <div class="approval-lecturer-info">
+            <div class="approval-info-item">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
+            <div class="approval-info-item">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
+            <div class="approval-info-item">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
+            <div class="approval-info-item">Department: <span class="approval-info-value" data-field="department">NA</span></div>
+            <div class="approval-info-item">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
+
+            <!-- First Divider -->
+            <div class="approval-line-divider"></div>
+
+            <div class="approval-info-item">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
+            <div class="approval-info-item">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
+            <div class="approval-info-item">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
+
+            <!-- Second Divider -->
+            <div class="approval-line-divider"></div>
+
+            <div class="approval-info-item">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
+            <div class="approval-info-item">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
+            <div class="approval-info-item">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
+
+            <!-- Additional Manager Information -->
+            <div class="approval-line-divider"></div>
+            <div class="approval-info-item">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
+            <div class="approval-info-item">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
+            <div class="approval-info-item">Verification Date: <span class="approval-info-value" data-field="InteractionDate">NA</span></div>
+        </div>
+    </div>
+
+    <!-- Approve/Reject Buttons -->
+    <div class="approval-approve-group">
+        <button class="approval-approve-button">Approve</button>
+    </div>
+
+    <div class="approval-reject-group">
+        <button class="approval-reject-button">Reject</button>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Handle row click
+        $(".claim-row").click(function () {
+            var claimId = $(this).data("claim-id");
+
+            // Send AJAX request to fetch claim details
+            $.ajax({
+                url: '@Url.Action("GetClaimDetailsApproved", "Approval")', // Updated action name
+                type: 'GET',
+                data: { claimId: claimId }, // Send the claim ID
+                success: function (data) {
+                    $(".approval-info-item span.approval-info-value").each(function () {
+                        var key = $(this).data("field"); // Use the data-field attribute
+                        $(this).text(data[key] || "NA"); // Use data[key] or fallback to "NA"
+                    });
+                },
+                error: function (error) {
+                    console.log("Error fetching claim details:", error);
+                }
+            });
+        });
+
+        // Approve/Reject button functionality (you'll need to implement the action methods)
+        $(".approval-approve-button").click(function () {
+            // Implement approve functionality
+        });
+
+        $(".approval-reject-button").click(function () {
+            // Implement reject functionality
+        });
+    });
+</script>
+
+ *@

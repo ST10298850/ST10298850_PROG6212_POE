@@ -16,5 +16,7 @@ namespace ST10298850_PROG6212_POE.Models
         public string? Email { get; set; }
 
         public string? Department { get; set; }
+
+        public DateTime? VerfificationDate { get; set; }
     }
 }

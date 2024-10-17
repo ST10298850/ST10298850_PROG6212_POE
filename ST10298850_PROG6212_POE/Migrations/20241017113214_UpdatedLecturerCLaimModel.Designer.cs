@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ST10298850_PROG6212_POE.Data;
 
@@ -11,9 +12,11 @@ using ST10298850_PROG6212_POE.Data;
 namespace ST10298850_PROG6212_POE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241017113214_UpdatedLecturerCLaimModel")]
+    partial class UpdatedLecturerCLaimModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,12 +99,12 @@ namespace ST10298850_PROG6212_POE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("InteractionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("VerfificationDate")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("CoordinatorId");
 
@@ -234,7 +237,7 @@ namespace ST10298850_PROG6212_POE.Migrations
                     b.HasOne("ST10298850_PROG6212_POE.Models.CoordinatorModel", "Coordinator")
                         .WithMany()
                         .HasForeignKey("CoordinatorId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ST10298850_PROG6212_POE.Models.LecturerModel", "Lecturer")
                         .WithMany("Claims")

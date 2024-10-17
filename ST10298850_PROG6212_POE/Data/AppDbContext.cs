@@ -43,6 +43,13 @@ namespace ST10298850_PROG6212_POE.Data
                 .WithMany(c => c.Documents)
                 .HasForeignKey(d => d.ClaimId)
                 .OnDelete(DeleteBehavior.Cascade); // Ensure cascading delete
+
+            modelBuilder.Entity<LecturerClaimModel>()
+       .HasOne(c => c.Coordinator)
+       .WithMany() // Assuming you don't have a collection of claims in CoordinatorModel
+       .HasForeignKey(c => c.CoordinatorId)
+       .OnDelete(DeleteBehavior.SetNull); // Change to Cascade if you want to delete claims when a coordinator is deleted
+
         }
     }
 }
