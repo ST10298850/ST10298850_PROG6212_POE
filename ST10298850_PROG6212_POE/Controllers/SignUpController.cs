@@ -23,7 +23,7 @@ namespace ST10298850_PROG6212_POE.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignUp(string role, string name, string email, string department)
+        public IActionResult SignUp(string role, string name, string email, string department, string campus)
         {
             if (string.IsNullOrEmpty(role) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
             {
@@ -37,7 +37,8 @@ namespace ST10298850_PROG6212_POE.Controllers
                 {
                     Name = name,
                     Email = email,
-                    Department = department
+                    Department = department,
+                    Campus = campus // Add campus to the lecturer model
                 };
                 _context.Lecturers.Add(lecturer);
             }
