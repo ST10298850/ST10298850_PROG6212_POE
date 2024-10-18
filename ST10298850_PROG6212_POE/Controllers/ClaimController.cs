@@ -84,6 +84,29 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             if (documentFile != null && documentFile.Length > 0)
             {
+                // Validate file type
+                var allowedFileTypes = new List<string>
+    {
+        "application/pdf",         // PDF
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // Word (DOCX)
+        "application/msword",      // Word (DOC)
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // Excel (XLSX)
+        "application/vnd.ms-excel" // Excel (XLS)
+    };
+
+                if (!allowedFileTypes.Contains(documentFile.ContentType))
+                {
+                    TempData["ErrorMessage"] = "Invalid file type. Please upload a PDF, Word, or Excel document.";
+                    return RedirectToAction("ClaimPageView");
+                }
+
+                // Validate file size (e.g., max 2MB)
+                if (documentFile.Length > 2 * 1024 * 1024) // 2MB in bytes
+                {
+                    TempData["ErrorMessage"] = "File size exceeds the limit of 2MB.";
+                    return RedirectToAction("ClaimPageView");
+                }
+
                 using (var memoryStream = new MemoryStream())
                 {
                     documentFile.CopyTo(memoryStream);
@@ -91,7 +114,7 @@ namespace ST10298850_PROG6212_POE.Controllers
 
                     var newDocument = new DocumentModel
                     {
-                        DocumentName = documentName,
+                        DocumentName = documentName, // Keep the file name provided by the user
                         Claim = newClaim,
                         FileData = fileData,
                         FileType = documentFile.ContentType

@@ -50,4 +50,6 @@ app.Run();
 
 //Japikse, P. & Troelsen, A. W., 2022. Pro C 10 with .NET 6:Foundational Principles and Practices in Programming. 11th ed. New York: Apress.
 
+//Stagner, J. (2020) [how do I:] get started with ASP.NET AJAX?, Microsoft Learn. Available at: https://learn.microsoft.com/en-us/aspnet/web-forms/videos/aspnet-ajax/how-do-i-get-started-with-aspnet-ajax (Accessed: 18 October 2024). 
+
 //--------------------------------------------------------END OF FILE--------------------------------------------------------

@@ -29,7 +29,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                 {
                     // Lecturer ID not found in the database
                     ModelState.AddModelError("", "Invalid Lecturer ID.");
-                    return RedirectToAction("SignIn", "Account");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else if (role == "AcademicManager" && academicManagerId.HasValue)
@@ -43,7 +43,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid Manager ID.");
-                    return RedirectToAction("SignIn", "Account");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else if (role == "Coordinator" && coordinatorId.HasValue)
@@ -57,11 +57,12 @@ namespace ST10298850_PROG6212_POE.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid Coordinator ID.");
-                    return RedirectToAction("SignIn", "Account");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             else
             {
+                ModelState.AddModelError("", "Invalid role or ID.");
                 return RedirectToAction("Index", "Home");
             }
         }

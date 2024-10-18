@@ -52,6 +52,22 @@
                         @if (Context.Session.GetInt32("LecturerId") != null || Context.Session.GetInt32("CoordinatorId") != null || Context.Session.GetInt32("AcademicManagerId") != null)
                         {
                             <li class="nav-item">
+                                <span class="nav-link text-dark">
+                                    @if (Context.Session.GetInt32("LecturerId") != null)
+                                    {
+                                        <text>Lecturer ID: @Context.Session.GetInt32("LecturerId")</text>
+                                    }
+                                    else if (Context.Session.GetInt32("CoordinatorId") != null)
+                                    {
+                                        <text>Coordinator ID: @Context.Session.GetInt32("CoordinatorId")</text>
+                                    }
+                                    else if (Context.Session.GetInt32("AcademicManagerId") != null)
+                                    {
+                                        <text>Manager ID: @Context.Session.GetInt32("AcademicManagerId")</text>
+                                    }
+                                </span>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="SignOut">Sign Out</a>
                             </li>
                         }

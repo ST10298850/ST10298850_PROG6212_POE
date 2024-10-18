@@ -2,66 +2,89 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="landing-page">
-    <h1>Welcome to the Claim Wages System</h1>
-    <p>Please select your role to continue:</p>
-
-    <form asp-controller="Role" asp-action="SelectRole" id="role-selection-form" method="post">
-        <!-- Role Selection -->
-        <div class="role-selection-group">
-            <label for="role" class="role-label">Select Role:</label>
-            <select id="role" name="role" class="form-control" onchange="toggleIdInput()">
-                <option value="">--Select Role--</option>
-                <option value="Lecturer">Lecturer</option>
-                <option value="AcademicManager">Academic Manager</option>
-                <option value="Coordinator">Coordinator</option>
-            </select>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <!-- Add Navbar Content Here -->
         </div>
+    </header>
 
-        <!-- Lecturer ID Input (hidden by default) -->
-        <div id="lecturer-id-group" class="id-group" style="display: none;">
-            <label for="lecturerId" class="id-label">Lecturer ID:</label>
-            <input type="text" id="lecturerId" name="lecturerId" class="form-control" />
+    <!-- Main Content Area -->
+    <div class="signup-page">
+        <div class="signup-form-container">
+            <h1>Welcome to the Claim Wages System</h1>
+            <p>Please select your role to continue:</p>
+
+            <form asp-controller="Role" asp-action="SelectRole" id="role-selection-form" method="post" class="signup-form">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label for="role" class="role-label">Select Role:</label>
+                    <select id="role" name="role" class="form-control" onchange="toggleIdInput()">
+                        <option value="">--Select Role--</option>
+                        <option value="Lecturer">Lecturer</option>
+                        <option value="AcademicManager">Academic Manager</option>
+                        <option value="Coordinator">Coordinator</option>
+                    </select>
+                </div>
+
+                <!-- Lecturer ID Input (hidden by default) -->
+                <div id="lecturer-id-group" class="form-group" style="display: none;">
+                    <label for="lecturerId" class="id-label">Lecturer ID:</label>
+                    <input type="text" id="lecturerId" name="lecturerId" class="form-control" />
+                </div>
+
+                <!-- Academic Manager ID Input (hidden by default) -->
+                <div id="academic-manager-id-group" class="form-group" style="display: none;">
+                    <label for="academicManagerId" class="id-label">Academic Manager ID:</label>
+                    <input type="text" id="academicManagerId" name="academicManagerId" class="form-control" />
+                </div>
+
+                <!-- Coordinator ID Input (hidden by default) -->
+                <div id="coordinator-id-group" class="form-group" style="display: none;">
+                    <label for="coordinatorId" class="id-label">Coordinator ID:</label>
+                    <input type="text" id="coordinatorId" name="coordinatorId" class="form-control" />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Continue</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Academic Manager ID Input (hidden by default) -->
-        <div id="academic-manager-id-group" class="id-group" style="display: none;">
-            <label for="academicManagerId" class="id-label">Academic Manager ID:</label>
-            <input type="text" id="academicManagerId" name="academicManagerId" class="form-control" />
-        </div>
+    <script>
+        function toggleIdInput() {
+            var role = document.getElementById("role").value;
+            var lecturerIdGroup = document.getElementById("lecturer-id-group");
+            var academicManagerIdGroup = document.getElementById("academic-manager-id-group");
+            var coordinatorIdGroup = document.getElementById("coordinator-id-group");
 
-        <!-- Coordinator ID Input (hidden by default) -->
-        <div id="coordinator-id-group" class="id-group" style="display: none;">
-            <label for="coordinatorId" class="id-label">Coordinator ID:</label>
-            <input type="text" id="coordinatorId" name="coordinatorId" class="form-control" />
-        </div>
+            // Hide all ID inputs by default
+            lecturerIdGroup.style.display = "none";
+            academicManagerIdGroup.style.display = "none";
+            coordinatorIdGroup.style.display = "none";
 
-        <!-- Submit Button -->
-        <div class="submit-button-group">
-            <button type="submit" class="btn-submit">Continue</button>
-        </div>
-    </form>
-</div>
-
-<script>
-    function toggleIdInput() {
-        var role = document.getElementById("role").value;
-        var lecturerIdGroup = document.getElementById("lecturer-id-group");
-        var academicManagerIdGroup = document.getElementById("academic-manager-id-group");
-        var coordinatorIdGroup = document.getElementById("coordinator-id-group");
-
-        // Hide all ID inputs by default
-        lecturerIdGroup.style.display = "none";
-        academicManagerIdGroup.style.display = "none";
-        coordinatorIdGroup.style.display = "none";
-
-        // Show the relevant input based on the selected role
-        if (role === "Lecturer") {
-            lecturerIdGroup.style.display = "block";
-        } else if (role === "AcademicManager") {
-            academicManagerIdGroup.style.display = "block";
-        } else if (role === "Coordinator") {
-            coordinatorIdGroup.style.display = "block";
+            // Show the relevant input based on the selected role
+            if (role === "Lecturer") {
+                lecturerIdGroup.style.display = "block";
+            } else if (role === "AcademicManager") {
+                academicManagerIdGroup.style.display = "block";
+            } else if (role === "Coordinator") {
+                coordinatorIdGroup.style.display = "block";
+            }
         }
-    }
-</script>
+    </script>
+</body>
+</html>

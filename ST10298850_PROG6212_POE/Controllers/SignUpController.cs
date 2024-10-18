@@ -18,7 +18,6 @@ public class SignUpController : Controller
     {
         return View("SignUpView");
     }
-
     [HttpPost]
     public IActionResult SignUp(string role, string name, string email, string department, string campus, string managerDepartment, string coordinatorDepartment)
     {
@@ -27,6 +26,8 @@ public class SignUpController : Controller
             ModelState.AddModelError("", "Role, Name, and Email are required.");
             return View("SignUpView");
         }
+
+        int userId = 0;
 
         if (role == "Lecturer")
         {
@@ -40,7 +41,8 @@ public class SignUpController : Controller
             _context.Lecturers.Add(lecturer);
             _context.SaveChanges();
 
-            HttpContext.Session.SetInt32("LecturerID", lecturer.LecturerId); // Store LecturerId in session
+            userId = lecturer.LecturerId;
+            HttpContext.Session.SetInt32("LecturerID", userId); // Store LecturerId in session
         }
         else if (role == "AcademicManager")
         {
@@ -53,7 +55,8 @@ public class SignUpController : Controller
             _context.AcademicManagers.Add(manager);
             _context.SaveChanges();
 
-            HttpContext.Session.SetInt32("ManagerID", manager.ManagerId); // Store ManagerId in session
+            userId = manager.ManagerId;
+            HttpContext.Session.SetInt32("ManagerID", userId); // Store ManagerId in session
         }
         else if (role == "Coordinator")
         {
@@ -66,7 +69,8 @@ public class SignUpController : Controller
             _context.Coordinators.Add(coordinator);
             _context.SaveChanges();
 
-            HttpContext.Session.SetInt32("CoordinatorID", coordinator.CoordinatorId); // Store CoordinatorId in session
+            userId = coordinator.CoordinatorId;
+            HttpContext.Session.SetInt32("CoordinatorID", userId); // Store CoordinatorId in session
         }
         else
         {
@@ -74,6 +78,8 @@ public class SignUpController : Controller
             return View("SignUpView");
         }
 
-        return RedirectToAction("Index", "Home");
+        ViewBag.UserId = userId;
+        return View("SignUpView");
     }
+
 }

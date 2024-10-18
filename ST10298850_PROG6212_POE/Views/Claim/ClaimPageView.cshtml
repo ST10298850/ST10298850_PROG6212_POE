@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Claim Page";
     var lecturerId = ViewBag.LecturerId ?? 0;
+    var errorMessage = TempData["ErrorMessage"] as string; // Get error message if it exists
 }
 
 <!DOCTYPE html>
@@ -10,58 +11,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Claim Page</title>
     <link rel="stylesheet" href="~/css/site.css" />
-    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <!-- Navigation Bar -->
     <header class="navbar">
         <div class="navbar-container">
             <!-- Add Navbar Content Here -->
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <div class="claim-main-content">
         <div class="claim-container">
-            <!-- Left Column: Claim Form -->
             <div class="claim-form-column">
                 <div class="claim-form">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger">
+                            @errorMessage
+                        </div>
+                    }
+
                     <form method="post" asp-action="SubmitClaim" enctype="multipart/form-data">
-                        <!-- Hidden input for LecturerId -->
                         <input type="hidden" name="lecturerId" value="@lecturerId" />
 
-                        <!-- Hours Worked -->
                         <div class="form-group">
                             <label for="hours">Hours Worked:</label>
                             <input type="number" id="hours" name="hoursWorked" class="form-control" required>
                         </div>
 
-                        <!-- Overtime Worked -->
                         <div class="form-group">
                             <label for="overtime">Overtime Worked:</label>
                             <input type="number" id="overtime" name="overtimeWorked" class="form-control" required>
                         </div>
 
-                        <!-- Hourly Rate -->
                         <div class="form-group">
                             <label for="hourlyRate">Hourly Rate:</label>
                             <input type="number" step="0.01" id="hourlyRate" name="hourlyRate" class="form-control" required>
                         </div>
 
-                        <!-- Document Name -->
                         <div class="form-group">
                             <label for="document">Document Name:</label>
                             <input type="text" id="document" name="documentName" class="form-control" required>
                         </div>
 
-                        <!-- Upload Document -->
                         <div class="form-group">
                             <label for="documentFile">Upload Document:</label>
                             <input type="file" id="documentFile" name="documentFile" class="form-control" required>
                         </div>
 
-                        <!-- Submit Claim Button -->
                         <div class="form-group">
                             <button type="submit" class="btn-signin">Submit Claim</button>
                         </div>
@@ -69,7 +66,6 @@
                 </div>
             </div>
 
-            <!-- Right Column: Claim History -->
             <div class="claim-history-column">
                 <div class="claim-history">
                     <h2>Claim History</h2>
@@ -103,16 +99,12 @@
 
                     if (data.length > 0) {
                         data.forEach(function (claim) {
-                            // Ensure property names match exactly
                             var claimId = claim.claimId;
-                            var submissionDate = new Date(claim.submissionDate); // Ensure correct casing
+                            var submissionDate = new Date(claim.submissionDate);
                             var formattedDate = isNaN(submissionDate) ? 'Invalid Date' : submissionDate.toLocaleDateString();
-                            var status = claim.status; // Ensure correct casing
+                            var status = claim.status;
 
-                            // Append row to the table
                             claimsTableBody.append('<tr><td>' + claimId + '</td><td>' + formattedDate + '</td><td>' + status + '</td></tr>');
-
-                            // Write beneath the table for debugging purposes
                             $('body').append('<p>ClaimId: ' + claimId + ', Date: ' + formattedDate + ', Status: ' + status + '</p>');
                         });
                     } else {
@@ -130,7 +122,5 @@
             loadClaims();
         });
     </script>
-
-
 </body>
 </html>

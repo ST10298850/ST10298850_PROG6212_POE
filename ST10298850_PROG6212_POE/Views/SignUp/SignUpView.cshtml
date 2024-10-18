@@ -86,6 +86,13 @@
                 document.getElementById("coordinator-fields").style.display = "block";
             }
         }
+
+        window.onload = function () {
+            var userId = '@ViewBag.UserId';
+            if (userId) {
+                alert('Your User ID is: ' + userId);
+            }
+        };
     </script>
 </body>
 </html>
