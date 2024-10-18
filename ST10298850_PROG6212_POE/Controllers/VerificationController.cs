@@ -59,30 +59,96 @@ namespace ST10298850_PROG6212_POE.Controllers
             // Return the data as JSON
             return Json(claimDetails);
         }
+
         [HttpPost]
         public IActionResult ApproveClaim(int id)
         {
+            // Fetch the claim using the claim ID
             var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == id);
+
             if (claim != null)
             {
-                claim.Status = "verified"; // Set the status to verified
-                _context.SaveChanges(); // Save changes to the database
-                return Ok();
+                // Assuming you store CoordinatorId in the session after coordinator login
+                var coordinatorId = HttpContext.Session.GetInt32("CoordinatorId");
+
+                if (coordinatorId.HasValue)
+                {
+                    // Set the CoordinatorId and update the status to 'verified'
+                    claim.CoordinatorId = coordinatorId.Value;
+                    claim.Status = "verified"; // Update claim status to 'verified'
+
+                    // Fetch the coordinator to update the VerificationDate
+                    var coordinator = _context.Coordinators.FirstOrDefault(c => c.CoordinatorId == coordinatorId.Value);
+
+                    if (coordinator != null)
+                    {
+                        // Set the current date and time as VerificationDate
+                        coordinator.VerificationDate = DateTime.Now;
+
+                        // Save the changes to both the claim and coordinator
+                        _context.SaveChanges();
+
+                        return Ok();
+                    }
+                    else
+                    {
+                        // If coordinator is not found
+                        return NotFound("Coordinator not found.");
+                    }
+                }
+                else
+                {
+                    // If no CoordinatorId is found, return an error response
+                    return BadRequest("Coordinator ID not found in session.");
+                }
             }
-            return NotFound();
+
+            return NotFound(); // If claim not found
         }
 
         [HttpPost]
         public IActionResult RejectClaim(int id)
         {
             var claim = _context.Claims.FirstOrDefault(c => c.ClaimId == id);
+
             if (claim != null)
             {
-                claim.Status = "rejected"; // Set the status to rejected
-                _context.SaveChanges(); // Save changes to the database
-                return Ok();
+                // Assuming you store CoordinatorId in the session after coordinator login
+                var coordinatorId = HttpContext.Session.GetInt32("CoordinatorId");
+
+                if (coordinatorId.HasValue)
+                {
+                    // Set the status to 'rejected' and update the CoordinatorId
+                    claim.CoordinatorId = coordinatorId.Value;
+                    claim.Status = "rejected";
+
+                    // Fetch the coordinator to update the VerificationDate
+                    var coordinator = _context.Coordinators.FirstOrDefault(c => c.CoordinatorId == coordinatorId.Value);
+
+                    if (coordinator != null)
+                    {
+                        // Set the current date and time as VerificationDate
+                        coordinator.VerificationDate = DateTime.Now;
+
+                        // Save the changes to both the claim and coordinator
+                        _context.SaveChanges();
+
+                        return Ok();
+                    }
+                    else
+                    {
+                        // If coordinator is not found
+                        return NotFound("Coordinator not found.");
+                    }
+                }
+                else
+                {
+                    // If no CoordinatorId is found, return an error response
+                    return BadRequest("Coordinator ID not found in session.");
+                }
             }
-            return NotFound();
+
+            return NotFound(); // If claim not found
         }
     }
 }

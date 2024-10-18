@@ -64,7 +64,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                 TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C"),
                 CoordinatorId = coordinator?.CoordinatorId, // Use null conditional operator
                 CoordinatorName = coordinator?.Name ?? "NA", // Provide fallback if null
-                VerificationDate = coordinator?.VerfificationDate.ToString() ?? "NA" // Provide fallback if null
+                VerificationDate = coordinator?.VerificationDate.ToString() ?? "NA" // Provide fallback if null
             };
 
             return Json(claimDetails);
