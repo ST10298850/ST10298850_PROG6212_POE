@@ -24,3 +24,4 @@ namespace ST10298850_PROG6212_POE.Models
         public string FileType { get; set; } = string.Empty; // MIME type (e.g., "application/pdf")
     }
 }
+ 

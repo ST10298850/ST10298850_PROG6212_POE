@@ -35,5 +35,7 @@ namespace ST10298850_PROG6212_POE.Models
 
         // New navigation property
         public CoordinatorModel? Coordinator { get; set; }
+
+        public string Notes { get; set; } = string.Empty;
     }
 }
