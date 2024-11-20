@@ -61,10 +61,11 @@ namespace ST10298850_PROG6212_POE.Controllers
 
 
         [HttpPost]
-        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile, string notes)
+        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile)
         {
             _logger.LogInformation("SubmitClaim method started.");
 
+            // Validate lecturer
             var lecturer = _context.Lecturers?.FirstOrDefault(l => l.LecturerId == lecturerId);
             if (lecturer == null)
             {
@@ -73,42 +74,46 @@ namespace ST10298850_PROG6212_POE.Controllers
                 return RedirectToAction("ClaimPageView");
             }
 
-            var newClaim = new LecturerClaimModel
-            {
-                LecturerId = lecturerId,
-                HoursWorked = hoursWorked,
-                OvertimeWorked = overtimeWorked,
-                HourlyRate = hourlyRate, // Add hourly rate to the claim model
-                SubmissionDate = DateTime.Now,
-                Notes = notes, // Add the notesto the claim model
-                Documents = new List<DocumentModel>(),
-            };
-
+            // File validation logic
             if (documentFile != null && documentFile.Length > 0)
             {
-                // Validate file type
                 var allowedFileTypes = new List<string>
-    {
-        "application/pdf",         // PDF
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // Word (DOCX)
-        "application/msword",      // Word (DOC)
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // Excel (XLSX)
-        "application/vnd.ms-excel" // Excel (XLS)
-    };
+        {
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel"
+        };
 
+                // Validate file type
                 if (!allowedFileTypes.Contains(documentFile.ContentType))
                 {
-                    TempData["ErrorMessage"] = "Invalid file type. Please upload a PDF, Word, or Excel document.";
+                    TempData["ErrorMessage"] = "Invalid file type. Only PDF, Word, and Excel files are allowed.";
                     return RedirectToAction("ClaimPageView");
                 }
 
                 // Validate file size (e.g., max 2MB)
                 if (documentFile.Length > 2 * 1024 * 1024) // 2MB in bytes
                 {
-                    TempData["ErrorMessage"] = "File size exceeds the limit of 2MB.";
+                    TempData["ErrorMessage"] = "The file is too large. Please upload a file smaller than 2MB.";
                     return RedirectToAction("ClaimPageView");
                 }
+            }
 
+            // Create and save claim
+            var newClaim = new LecturerClaimModel
+            {
+                LecturerId = lecturerId,
+                HoursWorked = hoursWorked,
+                OvertimeWorked = overtimeWorked,
+                HourlyRate = hourlyRate,
+                SubmissionDate = DateTime.Now,
+                Documents = new List<DocumentModel>()
+            };
+
+            if (documentFile != null && documentFile.Length > 0)
+            {
                 using (var memoryStream = new MemoryStream())
                 {
                     documentFile.CopyTo(memoryStream);
@@ -116,7 +121,7 @@ namespace ST10298850_PROG6212_POE.Controllers
 
                     var newDocument = new DocumentModel
                     {
-                        DocumentName = documentName, // Keep the file name provided by the user
+                        DocumentName = documentName,
                         Claim = newClaim,
                         FileData = fileData,
                         FileType = documentFile.ContentType
