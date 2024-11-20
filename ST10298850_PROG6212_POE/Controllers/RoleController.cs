@@ -15,7 +15,7 @@ namespace ST10298850_PROG6212_POE.Controllers
         }
 
         [HttpPost]
-        public IActionResult SelectRole(string role, int? lecturerId, int? academicManagerId, int? coordinatorId)
+        public IActionResult SelectRole(string role, int? lecturerId, int? academicManagerId, int? coordinatorId, int? hrId)
         {
             if (role == "Lecturer" && lecturerId.HasValue)
             {
@@ -57,6 +57,20 @@ namespace ST10298850_PROG6212_POE.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid Coordinator ID.");
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else if (role == "HR" && hrId.HasValue)
+            {
+                var hrExists = _context.HRs.Any(hr => hr.hrId == hrId.Value);
+                if (hrExists)
+                {
+                    HttpContext.Session.SetInt32("HRId", hrId.Value);
+                    return RedirectToAction("HRPageview", "HR");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid HR ID.");
                     return RedirectToAction("Index", "Home");
                 }
             }

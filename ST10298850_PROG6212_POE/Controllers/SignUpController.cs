@@ -72,6 +72,19 @@ public class SignUpController : Controller
             userId = coordinator.CoordinatorId;
             HttpContext.Session.SetInt32("CoordinatorID", userId); // Store CoordinatorId in session
         }
+        else if (role == "HR")
+        {
+            var hr = new HRModel
+            {
+                Name = name,
+                Email = email,
+            };
+            _context.HRs.Add(hr);
+            _context.SaveChanges();
+
+            userId = hr.hrId;
+            HttpContext.Session.SetInt32("hrId", userId); // Store CoordinatorId in session
+        }
         else
         {
             ModelState.AddModelError("", "Invalid role selected.");

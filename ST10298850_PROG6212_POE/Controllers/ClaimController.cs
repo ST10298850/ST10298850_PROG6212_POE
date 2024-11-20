@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using static Azure.Core.HttpHeader;
+using ST10298850_PROG6212_POE.Migrations;
 
 namespace ST10298850_PROG6212_POE.Controllers
 {
@@ -61,7 +62,7 @@ namespace ST10298850_PROG6212_POE.Controllers
 
 
         [HttpPost]
-        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile)
+        public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile, string notes)
         {
             _logger.LogInformation("SubmitClaim method started.");
 
@@ -109,6 +110,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                 OvertimeWorked = overtimeWorked,
                 HourlyRate = hourlyRate,
                 SubmissionDate = DateTime.Now,
+                Notes = notes,
                 Documents = new List<DocumentModel>()
             };
 

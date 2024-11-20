@@ -33,8 +33,9 @@
                     <select id="role" name="role" class="form-control" onchange="toggleIdInput()">
                         <option value="">--Select Role--</option>
                         <option value="Lecturer">Lecturer</option>
-                        <option value="AcademicManager">Academic Manager</option>
                         <option value="Coordinator">Coordinator</option>
+                        <option value="AcademicManager">Academic Manager</option>
+                        <option value="HR">HR</option>
                     </select>
                 </div>
 
@@ -55,6 +56,14 @@
                     <label for="coordinatorId" class="id-label">Coordinator ID:</label>
                     <input type="text" id="coordinatorId" name="coordinatorId" class="form-control" />
                 </div>
+                <!-- HR ID Input (hidden by default) -->
+                <div id="hr-id-group" class="form-group" style="display: none;">
+                    <label for="hrId" class="id-label">HR ID:</label>
+                    <input type="text" id="hrId" name="hrId" class="form-control" />
+                </div>
+
+
+
 
                 <!-- Submit Button -->
                 <div class="form-group">
@@ -70,11 +79,13 @@
             var lecturerIdGroup = document.getElementById("lecturer-id-group");
             var academicManagerIdGroup = document.getElementById("academic-manager-id-group");
             var coordinatorIdGroup = document.getElementById("coordinator-id-group");
+            var hrIdGroup = document.getElementById("hr-id-group");
 
             // Hide all ID inputs by default
             lecturerIdGroup.style.display = "none";
             academicManagerIdGroup.style.display = "none";
             coordinatorIdGroup.style.display = "none";
+            hrIdGroup.style.display = "none";
 
             // Show the relevant input based on the selected role
             if (role === "Lecturer") {
@@ -83,6 +94,8 @@
                 academicManagerIdGroup.style.display = "block";
             } else if (role === "Coordinator") {
                 coordinatorIdGroup.style.display = "block";
+            }else if (role === "HR") {
+                hrIdGroup.style.display = "block";
             }
         }
     </script>

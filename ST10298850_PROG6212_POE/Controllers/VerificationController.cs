@@ -53,7 +53,8 @@ namespace ST10298850_PROG6212_POE.Controllers
                 TotalHours = claim.HoursWorked + claim.OvertimeWorked,
                 RegularPay = (claim.HoursWorked * claim.HourlyRate).ToString("C"),
                 OvertimePay = (claim.OvertimeWorked * (claim.HourlyRate * 1.5M)).ToString("C"), // Assume 1.5x for overtime
-                TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C")
+                TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C"),
+                Notes = claim.Notes
             };
 
             // Return the data as JSON

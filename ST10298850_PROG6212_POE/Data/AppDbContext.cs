@@ -13,6 +13,7 @@ namespace ST10298850_PROG6212_POE.Data
         public DbSet<LecturerClaimModel> Claims { get; set; } = null!;
         public DbSet<DocumentModel> Documents { get; set; } = null!;
         public DbSet<ApprovalModel> Approvals { get; set; } = null!;
+        public DbSet<HRModel> HRs { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
