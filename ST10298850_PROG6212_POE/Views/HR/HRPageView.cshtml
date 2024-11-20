@@ -1,5 +1,108 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<ST10298850_PROG6212_POE.Models.LecturerModel>
 @{
+    var claims = ViewBag.Claims as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
+
+<div style="display: flex; gap: 20px;">
+    <!-- Claims Table -->
+    <div style="flex: 2;">
+        <h2>Claims</h2>
+        <form method="get" action="@Url.Action("HRPageView", "HR")">
+            <label for="filterType">Filter by:</label>
+            <select name="filterType" id="filterType">
+                <option value="date">Date</option>
+                <option value="status">Status</option>
+                <option value="userid">User ID</option>
+            </select>
+            <input type="text" name="filterValue" placeholder="Enter filter value" />
+            <button type="submit">Filter</button>
+        </form>
+
+        <table border="1" style="width: 100%; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Claim ID</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Submission Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (claims != null && claims.Any())
+                {
+                    foreach (var claim in claims)
+                    {
+                        <tr>
+                            <td>@claim.ClaimId</td>
+                            <td>@claim.LecturerId</td>
+                            <td>@claim.Status</td>
+                            <td>@claim.SubmissionDate.ToShortDateString()</td>
+                            <td>
+                                <a href="#">View</a>
+                                <a href="#">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5">No claims found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Users Table -->
+    <div style="flex: 1;">
+        <h2>Users</h2>
+        <table border="1" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.LecturerId</td>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>
+                                <button onclick="editUser(@user.LecturerId)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No users found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function editUser(userId) {
+        const name = prompt("Enter new name:");
+        const email = prompt("Enter new email:");
+        if (name && email) {
+            fetch('/HR/UpdateUser', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ LecturerId: userId, Name: name, Email: email })
+            }).then(() => window.location.reload());
+        }
+    }
+</script>

@@ -21,6 +21,8 @@ namespace ST10298850_PROG6212_POE.Models
         // New property for Campus
         [Required]
         public string Campus { get; set; } = string.Empty; // Initialize with default value
+        [Required]
+        public string PasswordHash { get; set; } = string.Empty;
 
         public ICollection<LecturerClaimModel> Claims { get; set; } = new List<LecturerClaimModel>(); // Initialize with default value
     }

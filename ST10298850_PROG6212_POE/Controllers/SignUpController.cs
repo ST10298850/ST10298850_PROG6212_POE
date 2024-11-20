@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ST10298850_PROG6212_POE.Data;
 using ST10298850_PROG6212_POE.Models;
+using System.Text;
+using System.Security.Cryptography;
+using System.Text;
 
 public class SignUpController : Controller
 {
@@ -18,16 +21,29 @@ public class SignUpController : Controller
     {
         return View("SignUpView");
     }
-    [HttpPost]
-    public IActionResult SignUp(string role, string name, string email, string department, string campus, string managerDepartment, string coordinatorDepartment)
+    // Helper method for hashing passwords
+    private string HashPassword(string password)
     {
-        if (string.IsNullOrEmpty(role) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email))
+        using (var sha256 = SHA256.Create())
+        {
+            var bytes = Encoding.UTF8.GetBytes(password);
+            var hash = sha256.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
+        }
+    }
+
+    [HttpPost]
+    public IActionResult SignUp(string role, string name, string email, string department, string campus, string managerDepartment, string coordinatorDepartment, string password)
+    {
+        if (string.IsNullOrEmpty(role) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
         {
             ModelState.AddModelError("", "Role, Name, and Email are required.");
             return View("SignUpView");
         }
 
         int userId = 0;
+
+        string hashedPassword = HashPassword(password);//Passwrod attribute is hashed
 
         if (role == "Lecturer")
         {
@@ -36,7 +52,8 @@ public class SignUpController : Controller
                 Name = name,
                 Email = email,
                 Department = department,  // Uses the general 'department' for Lecturer
-                Campus = campus
+                Campus = campus,
+                 PasswordHash = hashedPassword
             };
             _context.Lecturers.Add(lecturer);
             _context.SaveChanges();
@@ -50,7 +67,8 @@ public class SignUpController : Controller
             {
                 Name = name,
                 Email = email,
-                Department = managerDepartment  // Uses manager-specific department
+                Department = managerDepartment,  // Uses manager-specific department
+                 PasswordHash = hashedPassword
             };
             _context.AcademicManagers.Add(manager);
             _context.SaveChanges();
@@ -64,7 +82,8 @@ public class SignUpController : Controller
             {
                 Name = name,
                 Email = email,
-                Department = coordinatorDepartment  // Uses coordinator-specific department
+                Department = coordinatorDepartment,  // Uses coordinator-specific department
+                 PasswordHash = hashedPassword
             };
             _context.Coordinators.Add(coordinator);
             _context.SaveChanges();
@@ -78,6 +97,7 @@ public class SignUpController : Controller
             {
                 Name = name,
                 Email = email,
+                PasswordHash = hashedPassword
             };
             _context.HRs.Add(hr);
             _context.SaveChanges();

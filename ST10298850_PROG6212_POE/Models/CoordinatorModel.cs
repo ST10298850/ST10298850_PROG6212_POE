@@ -18,5 +18,8 @@ namespace ST10298850_PROG6212_POE.Models
         public string? Department { get; set; }
 
         public DateTime? VerificationDate { get; set; }
+
+        [Required]
+        public string PasswordHash { get; set; } = string.Empty;
     }
 }

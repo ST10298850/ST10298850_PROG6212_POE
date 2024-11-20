@@ -15,5 +15,7 @@ namespace ST10298850_PROG6212_POE.Models
         [Required]
         public string? Email { get; set; }
         public string? Department { get; set; }
+        [Required]
+        public string PasswordHash { get; set; } = string.Empty;
     }
 }
