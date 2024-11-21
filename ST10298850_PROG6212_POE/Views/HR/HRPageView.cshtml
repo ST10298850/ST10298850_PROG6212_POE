@@ -100,9 +100,36 @@
             </table>
         </div>
     </div>
+    <form method="get" action="@Url.Action("GenerateReport", "HR")" target="_blank">
+        <input type="hidden" name="filterType" id="hiddenFilterType" value="" />
+        <input type="hidden" name="filterValue" id="hiddenFilterValue" value="" />
+        <button type="submit" class="HR-btn-generate-report">Generate Report</button>
+    </form>
 </div>
 
+<!-- JavaScript Section -->
 <script>
+    // Update the report generation form based on current filters
+    document.querySelector('.HR-filter-form').addEventListener('submit', function (e) {
+        const filterType = document.querySelector('#filterType').value;
+        const filterValue = document.querySelector('[name="filterValue"]').value;
+
+        // Update hidden fields in the report form
+        document.querySelector('#hiddenFilterType').value = filterType;
+        document.querySelector('#hiddenFilterValue').value = filterValue;
+    });
+
+    // Ensure the report button submits the correct filter data
+    document.querySelector('.HR-btn-generate-report').addEventListener('click', function (e) {
+        const filterType = document.querySelector('#filterType').value;
+        const filterValue = document.querySelector('[name="filterValue"]').value;
+
+        // Update hidden fields in the report form
+        document.querySelector('#hiddenFilterType').value = filterType;
+        document.querySelector('#hiddenFilterValue').value = filterValue;
+    });
+
+    // Function to edit user details
     function editUser(userId) {
         const name = prompt("Enter new name:");
         const email = prompt("Enter new email:");

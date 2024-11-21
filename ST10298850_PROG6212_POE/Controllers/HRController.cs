@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ST10298850_PROG6212_POE.Data;
 using ST10298850_PROG6212_POE.Models;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ST10298850_PROG6212_POE.Controllers
@@ -67,6 +68,47 @@ namespace ST10298850_PROG6212_POE.Controllers
             }
 
             return RedirectToAction("HRPageView");
+        }
+
+        public async Task<IActionResult> GenerateReport(string filterType, string filterValue)
+        {
+            // Fetch and filter claims as in HRPageView
+            var claims = _context.Claims.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterType) && !string.IsNullOrEmpty(filterValue))
+            {
+                switch (filterType.ToLower())
+                {
+                    case "date":
+                        if (DateTime.TryParse(filterValue, out var filterDate))
+                            claims = claims.Where(c => c.SubmissionDate.Date == filterDate.Date);
+                        break;
+                    case "status":
+                        claims = claims.Where(c => c.Status.Contains(filterValue));
+                        break;
+                    case "userid":
+                        if (int.TryParse(filterValue, out var userId))
+                            claims = claims.Where(c => c.LecturerId == userId);
+                        break;
+                }
+            }
+
+            var filteredClaims = await claims.Include(c => c.Lecturer).ToListAsync();
+
+            // Convert claims to CSV
+            var csvContent = new StringBuilder();
+            csvContent.AppendLine("Claim ID,User ID,Status,Submission Date");
+
+            foreach (var claim in filteredClaims)
+            {
+                csvContent.AppendLine($"{claim.ClaimId},{claim.LecturerId},{claim.Status},{claim.SubmissionDate:yyyy-MM-dd}");
+            }
+
+            // Return as downloadable file
+            var csvBytes = Encoding.UTF8.GetBytes(csvContent.ToString());
+            var csvFileName = $"ClaimsReport_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+            return File(csvBytes, "text/csv", csvFileName);
         }
     }
 }
