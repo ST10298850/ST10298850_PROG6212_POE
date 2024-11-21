@@ -42,30 +42,36 @@
         <div class="claim-form-column">
             <div class="claim-form">
                 <h2>Claim Details</h2>
-                <div class="form-group">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
-                <div class="form-group">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
-                <div class="form-group">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
-                <div class="form-group">Department: <span class="approval-info-value" data-field="department">NA</span></div>
-                <div class="form-group">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
+                <div class="form-group">Lecturer ID: <span class="approval-info-value" id="lecturerId">NA</span></div>
+                <div class="form-group">Full Name: <span class="approval-info-value" id="fullName">NA</span></div>
+                <div class="form-group">Hourly Rate: <span class="approval-info-value" id="hourlyRate">NA</span></div>
+                <div class="form-group">Department: <span class="approval-info-value" id="department">NA</span></div>
+                <div class="form-group">Campus: <span class="approval-info-value" id="campus">NA</span></div>
                 <hr class="approval-line-divider" />
 
-                <div class="form-group">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
-                <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
-                <div class="form-group">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
+                <div class="form-group">Regular Hours Worked: <span class="approval-info-value" id="hoursWorked">NA</span></div>
+                <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" id="overtimeWorked">NA</span></div>
+                <div class="form-group">Total Hours Worked: <span class="approval-info-value" id="totalHours">NA</span></div>
                 <hr class="approval-line-divider" />
 
-                <div class="form-group">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
-                <div class="form-group">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
-                <div class="form-group">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
+                <div class="form-group">Regular Pay: <span class="approval-info-value" id="regularPay">NA</span></div>
+                <div class="form-group">Overtime Pay: <span class="approval-info-value" id="overtimePay">NA</span></div>
+                <div class="form-group">Total Pay: <span class="approval-info-value" id="totalPay">NA</span></div>
                 <hr class="approval-line-divider" />
-                <div class="form-group">Notes: <span class="approval-info-value" data-field="notes">NA</span></div>
+                <div class="form-group">Notes: <span class="approval-info-value" id="notes">NA</span></div>
+
                 <hr class="approval-line-divider" />
-                <div class="form-group">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
-                <div class="form-group">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
-                <div class="form-group">Verification Date: <span class="approval-info-value" data-field="verificationDate">NA</span></div>
-            </div>
+                <label>Claim Validity:</label>
+                <div class="form-group">Hourly Rate Validity: <span class="approval-info-value" id="validHourlyRate">NA</span></div>
+                <div class="form-group">Hours Worked Validity: <span class="approval-info-value" id="validHoursWorked">NA</span></div>
+                <div class="form-group">Overtime Worked Validity: <span class="approval-info-value" id="validOvertimeWorked">NA</span></div>
+            </div><hr class="approval-line-divider" />
+            <div class="form-group">Coordinator ID: <span class="approval-info-value" id="coordinatorId">NA</span></div>
+            <div class="form-group">Coordinator Name: <span class="approval-info-value" id="coordinatorName">NA</span></div>
+            <div class="form-group">Verification Date: <span class="approval-info-value" id="verificationDate">NA</span></div>
         </div>
     </div>
+
 
     <!-- Approve/Reject Buttons -->
     <div class="form-group">
@@ -90,10 +96,37 @@
                 type: 'GET',
                 data: { claimId: selectedClaimId }, // Send the claim ID
                 success: function (data) {
-                    $(".approval-info-value").each(function () {
-                        var key = $(this).data("field");
-                        $(this).text(data[key] || "NA");
-                    });
+                    // Map claim details to their respective fields by ID
+                    $("#lecturerId").text(data.lecturerId || "NA");
+                    $("#fullName").text(data.fullName || "NA");
+                    $("#hourlyRate").text(data.hourlyRate || "NA");
+                    $("#department").text(data.department || "NA");
+                    $("#campus").text(data.campus || "NA");
+                    $("#hoursWorked").text(data.hoursWorked || "NA");
+                    $("#overtimeWorked").text(data.overtimeWorked || "NA");
+                    $("#totalHours").text(data.totalHours || "NA");
+                    $("#regularPay").text(data.regularPay || "NA");
+                    $("#overtimePay").text(data.overtimePay || "NA");
+                    $("#totalPay").text(data.totalPay || "NA");
+                    $("#notes").text(data.notes || "NA");
+                    $("#coordinatorId").text(data.coordinatorId || "NA");
+                    $("#coordinatorName").text(data.coordinatorName || "NA");
+                    $("#verificationDate").text(data.verificationDate || "NA");
+
+                    // Show validation results
+                    $("#validHourlyRate").text(data.isValidHourlyRate ? "Valid" : "Invalid");
+                    $("#validHoursWorked").text(data.isValidHoursWorked ? "Valid" : "Invalid");
+                    $("#validOvertimeWorked").text(data.isValidOvertimeWorked ? "Valid" : "Invalid");
+
+                    // Update validity status with dynamic text and color
+                    $(".validity-hourly-rate").text(data.isValidHourlyRate ? "Hourly rate is valid" : "Hourly rate is invalid")
+                        .css("color", data.isValidHourlyRate ? "green" : "red");
+
+                    $(".validity-hours-worked").text(data.isValidHoursWorked ? "Hours worked is valid" : "Hours worked is invalid")
+                        .css("color", data.isValidHoursWorked ? "green" : "red");
+
+                    $(".validity-overtime-worked").text(data.isValidOvertimeWorked ? "Overtime worked is valid" : "Overtime worked is invalid")
+                        .css("color", data.isValidOvertimeWorked ? "green" : "red");
                 },
                 error: function (error) {
                     console.log("Error fetching claim details:", error);

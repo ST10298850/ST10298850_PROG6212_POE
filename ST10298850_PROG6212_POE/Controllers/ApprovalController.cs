@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ST10298850_PROG6212_POE.Data;
+using ST10298850_PROG6212_POE.Models;
 
 namespace ST10298850_PROG6212_POE.Controllers
 {
@@ -45,6 +46,10 @@ namespace ST10298850_PROG6212_POE.Controllers
                 return NotFound();
             }
 
+            bool isValidHourlyRate = IsClaimValid(claim).Item1;
+            bool isValidHoursWorked = IsClaimValid(claim).Item2;
+            bool isValidOvertimeWorked = IsClaimValid(claim).Item3;
+
             // Check for null references for the coordinator and lecturer
             var coordinator = claim.Coordinator; // Get the coordinator for easier access
             var lecturer = claim.Lecturer; // Get the lecturer for easier access
@@ -65,7 +70,10 @@ namespace ST10298850_PROG6212_POE.Controllers
                 Notes = claim.Notes,
                 CoordinatorId = coordinator?.CoordinatorId, // Use null conditional operator
                 CoordinatorName = coordinator?.Name ?? "NA", // Provide fallback if null
-                VerificationDate = coordinator?.VerificationDate.ToString() ?? "NA" // Provide fallback if null
+                VerificationDate = coordinator?.VerificationDate.ToString() ?? "NA", // Provide fallback if null
+                isValidHourlyRate,
+                isValidHoursWorked,
+                isValidOvertimeWorked
             };
 
             return Json(claimDetails);
@@ -95,6 +103,20 @@ namespace ST10298850_PROG6212_POE.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+        private (bool isHourlyRateValid, bool isHoursWorkedValid, bool isOvertimeValid) IsClaimValid(LecturerClaimModel claim)
+        {
+            // Hourly Rate validation (50 - 400)
+            bool isHourlyRateValid = claim.HourlyRate >= 50 && claim.HourlyRate <= 400;
+
+            // Hours Worked validation (35 - 80)
+            bool isHoursWorkedValid = claim.HoursWorked >= 35 && claim.HoursWorked <= 80;
+
+            // Overtime validation (cannot exceed 10 hours)
+            bool isOvertimeValid = claim.OvertimeWorked <= 10;
+
+            // Return tuple with all validation results
+            return (isHourlyRateValid, isHoursWorkedValid, isOvertimeValid);
         }
     }
 }
