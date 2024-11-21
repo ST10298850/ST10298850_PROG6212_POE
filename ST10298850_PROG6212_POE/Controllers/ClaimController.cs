@@ -41,25 +41,62 @@ namespace ST10298850_PROG6212_POE.Controllers
         [HttpGet]
         public IActionResult GetClaims()
         {
+            // Retrieve the lecturerId from the session
             int? lecturerId = HttpContext.Session.GetInt32("LecturerId");
             if (!lecturerId.HasValue)
             {
                 return Unauthorized();
             }
 
+            // Fetch claims related to the lecturerId and include all required fields
             var claims = _context.Claims
                 .Where(c => c.LecturerId == lecturerId.Value)
                 .Select(c => new
                 {
-                    c.ClaimId,
-                    c.SubmissionDate, // Retrieve SubmissionDate from claims table
-                    c.Status // Retrieve Status from LecturerClaimModel
+                    c.ClaimId,                 // Claim ID
+                    c.SubmissionDate,          // Submission Date
+                    c.Status,                  // Claim Status
+                    c.HoursWorked,             // Hours Worked
+                    c.OvertimeWorked,          // Overtime Worked
+                    c.HourlyRate,              // Hourly Rate
+                    c.Notes,                  // Notes associated with the claim
                 })
                 .ToList();
 
+            // Return the claims data as JSON
             return Json(claims);
         }
 
+        [HttpGet]
+        public IActionResult GetClaimDetails(int id)
+        {
+            // Fetch the claim with the given ID
+            var claim = _context.Claims
+                .Include(c => c.Lecturer) // You can include other related entities if needed
+                .FirstOrDefault(c => c.ClaimId == id);
+
+            if (claim == null)
+            {
+                return NotFound();
+            }
+
+            // Prepare data to return in JSON format
+            var claimDetails = new
+            {
+                LecturerId = claim.Lecturer.LecturerId,
+                HourlyRate = claim.HourlyRate.ToString("C"), // Format as currency
+                HoursWorked = claim.HoursWorked,
+                OvertimeWorked = claim.OvertimeWorked,
+                TotalHours = claim.HoursWorked + claim.OvertimeWorked,
+                RegularPay = (claim.HoursWorked * claim.HourlyRate).ToString("C"),
+                OvertimePay = (claim.OvertimeWorked * (claim.HourlyRate * 1.5M)).ToString("C"), // Assume 1.5x for overtime
+                TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C"),
+                Notes = claim.Notes           // Notes associated with the claim
+            };
+
+            // Return the data as JSON
+            return Json(claimDetails);
+        }
 
         [HttpPost]
         public IActionResult SubmitClaim(int lecturerId, decimal hoursWorked, decimal overtimeWorked, decimal hourlyRate, string documentName, IFormFile documentFile, string notes)

@@ -4,127 +4,171 @@
     var errorMessage = TempData["ErrorMessage"] as string; // Get error message if it exists
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claim Page</title>
-    <link rel="stylesheet" href="~/css/site.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <header class="navbar">
-        <div class="navbar-container">
-            <!-- Add Navbar Content Here -->
-        </div>
-    </header>
+<div class="claim-main-content">
+    <!-- Container for the Table and Lecturer Info -->
+    <div class="claim-container">
+        <!-- Lecturer Information -->
+        <div class="claim-form-column">
+            <div class="claim-form">
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger">
+                        @errorMessage
+                    </div>
+                }
 
-    <div class="claim-main-content">
-        <div class="claim-container">
-            <div class="claim-form-column">
-                <div class="claim-form">
-                    @if (!string.IsNullOrEmpty(errorMessage))
-                    {
-                        <div class="alert alert-danger">
-                            @errorMessage
-                        </div>
-                    }
+                <form method="post" asp-action="SubmitClaim" enctype="multipart/form-data">
+                    <input type="hidden" name="lecturerId" value="@lecturerId" />
 
-                    <form method="post" asp-action="SubmitClaim" enctype="multipart/form-data">
-                        <input type="hidden" name="lecturerId" value="@lecturerId" />
+                    <div class="form-group">
+                        <label for="hours">Hours Worked:</label>
+                        <input type="number" id="hours" name="hoursWorked" class="form-control" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="hours">Hours Worked:</label>
-                            <input type="number" id="hours" name="hoursWorked" class="form-control" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="overtime">Overtime Worked:</label>
+                        <input type="number" id="overtime" name="overtimeWorked" class="form-control" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="overtime">Overtime Worked:</label>
-                            <input type="number" id="overtime" name="overtimeWorked" class="form-control" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="hourlyRate">Hourly Rate:</label>
+                        <input type="number" step="0.01" id="hourlyRate" name="hourlyRate" class="form-control" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="hourlyRate">Hourly Rate:</label>
-                            <input type="number" step="0.01" id="hourlyRate" name="hourlyRate" class="form-control" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="document">Document Name:</label>
+                        <input type="text" id="document" name="documentName" class="form-control" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="document">Document Name:</label>
-                            <input type="text" id="document" name="documentName" class="form-control" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="documentFile">Upload Document:</label>
+                        <input type="file" id="documentFile" name="documentFile" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Notes:</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="3" required></textarea>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="documentFile">Upload Document:</label>
-                            <input type="file" id="documentFile" name="documentFile" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="notes">Notes:</label>
-                            <textarea id="notes" name="notes" class="form-control" rows="3" required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn-signin">Submit Claim</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-signin">Submit Claim</button>
+                    </div>
+                </form>
             </div>
+        </div>
 
-            <div class="claim-history-column">
-                <div class="claim-history">
-                    <h2>Claim History</h2>
-                    <table class="claim-history-table">
-                        <thead>
-                            <tr>
-                                <th>Claim ID</th>
-                                <th>Claim Date</th>
-                                <th>Approval Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="claimsTableBody">
-                            <tr>
-                                <td colspan="3">Loading claims...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- Table for Claims -->
+        <div class="claim-history-column">
+            <div class="claim-history">
+                <h2>Claim History</h2>
+                <table class="claim-history-table">
+                    <thead>
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Claim Date</th>
+                            <th>Approval Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="claimsTableBody">
+                        <tr>
+                            <td colspan="3">Loading claims...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="claim-form-column">
+            <div class="claim-form">
+                <h2>Claim Details</h2>
+                <div class="form-group">Hourly Rate: <span class="approval-info-value" id="HourlyRate">NA</span></div>
+                <div class="form-group">Regular Hours Worked: <span class="approval-info-value" id="hoursWorked">NA</span></div>
+                <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" id="overtimeWorked">NA</span></div>
+                <div class="form-group">Total Hours Worked: <span class="approval-info-value" id="totalHours">NA</span></div>
+                <hr class="approval-line-divider" />
+
+                <div class="form-group">Regular Pay: <span class="approval-info-value" id="regularPay">NA</span></div>
+                <div class="form-group">Overtime Pay: <span class="approval-info-value" id="overtimePay">NA</span></div>
+                <div class="form-group">Total Pay: <span class="approval-info-value" id="totalPay">NA</span></div>
+                <hr class="approval-line-divider" />
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <textarea id="notesPrint" name="notes" class="form-control" rows="3" readonly></textarea>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        function loadClaims() {
-            console.log("Loading claims...");
-            $.ajax({
-                url: '/Claim/GetClaims',
-                method: 'GET',
-                success: function (data) {
-                    var claimsTableBody = $('#claimsTableBody');
-                    claimsTableBody.empty();
+</div>
 
-                    if (data.length > 0) {
-                        data.forEach(function (claim) {
-                            var claimId = claim.claimId;
-                            var submissionDate = new Date(claim.submissionDate);
-                            var formattedDate = isNaN(submissionDate) ? 'Invalid Date' : submissionDate.toLocaleDateString();
-                            var status = claim.status;
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function loadClaims() {
+        console.log("Loading claims...");
+        $.ajax({
+            url: '/Claim/GetClaims', // Your controller's method to load claims
+            method: 'GET',
+            success: function (data) {
+                var claimsTableBody = $('#claimsTableBody');
+                claimsTableBody.empty();
 
-                            claimsTableBody.append('<tr><td>' + claimId + '</td><td>' + formattedDate + '</td><td>' + status + '</td></tr>');
-                            $('body').append('<p>ClaimId: ' + claimId + ', Date: ' + formattedDate + ', Status: ' + status + '</p>');
-                        });
-                    } else {
-                        claimsTableBody.append('<tr><td colspan="3">No claims found.</td></tr>');
-                    }
-                },
-                error: function () {
-                    alert('Failed to load claims.');
+                if (data.length > 0) {
+                    data.forEach(function (claim) {
+                        var claimId = claim.claimId;
+                        var submissionDate = new Date(claim.submissionDate);
+                        var formattedDate = isNaN(submissionDate) ? 'Invalid Date' : submissionDate.toLocaleDateString();
+                        var status = claim.status;
+
+                        // Add a clickable row with the data-claim-id attribute
+                        claimsTableBody.append(
+                            `<tr class="clickable-row" data-claim-id="${claimId}">
+                                <td>${claimId}</td>
+                                <td>${formattedDate}</td>
+                                <td>${status}</td>
+                            </tr>`
+                        );
+                    });
+                } else {
+                    claimsTableBody.append('<tr><td colspan="3">No claims found.</td></tr>');
                 }
-            });
-        }
 
-        $(document).ready(function () {
-            console.log("Page loaded.");
-            loadClaims();
+                // Attach click event to each row
+                $(".clickable-row").click(function () {
+                    var selectedClaimId = $(this).data("claim-id");
+                    fetchClaimDetails(selectedClaimId);
+                });
+            },
+            error: function () {
+                alert('Failed to load claims.');
+            }
         });
-    </script>
-</body>
-</html>
+    }
+
+    function fetchClaimDetails(claimId) {
+        console.log("Fetching details for claim ID:", claimId);
+
+        $.ajax({
+            url: `/Claim/GetClaimDetails`,
+            method: 'GET',
+            data: { id: claimId },
+            success: function (data) {
+                console.log("Claim Details:", data); // Log the data received
+
+                $('#HourlyRate').text(data.hourlyRate || "NA");
+                $("#hoursWorked").text(data.hoursWorked || "NA");
+                $("#overtimeWorked").text(data.overtimeWorked || "NA");
+                $("#totalHours").text(data.totalHours || "NA");
+                $("#regularPay").text(data.regularPay || "NA");
+                $("#overtimePay").text(data.overtimePay || "NA");
+                $("#totalPay").text(data.totalPay || "NA");
+                $("#notesPrint").text(data.notes || "NA");
+            },
+            error: function (error) {
+                console.log("Error fetching claim details:", error);
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        console.log("Page loaded.");
+        loadClaims();
+    });
+</script>

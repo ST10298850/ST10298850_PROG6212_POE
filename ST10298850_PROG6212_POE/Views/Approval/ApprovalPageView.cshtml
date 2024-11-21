@@ -3,77 +3,74 @@
     var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
 
-<div class="approval-page">
+<div class="claim-main-content">
     <!-- Container for the Table and Lecturer Info -->
-    <div class="approval-content-container">
+    <div class="claim-container">
         <!-- Table for Claims -->
-        <div class="approval-claim-list-box">
-            <table class="approval-claim-table">
-                <thead>
-                    <tr>
-                        <th>Claim ID</th>
-                        <th>Claim Date</th>
-                        <th>Documents</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var claim in claims)
-                    {
-                        <tr class="claim-row" data-claim-id="@claim.ClaimId">
-                            <td>@claim.ClaimId</td>
-                            <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
-                            <td>
-                                @foreach (var document in claim.Documents)
-                                {
-                                    <span>@document.DocumentName</span>
-                                    <br />
-                                }
-                            </td>
+        <div class="claim-history-column">
+            <div class="claim-history">
+                <h2>Pending Claims</h2>
+                <table class="claim-history-table">
+                    <thead>
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Claim Date</th>
+                            <th>Documents</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in claims)
+                        {
+                            <tr class="claim-row" data-claim-id="@claim.ClaimId">
+                                <td>@claim.ClaimId</td>
+                                <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @foreach (var document in claim.Documents)
+                                    {
+                                        <span>@document.DocumentName</span>
+                                        <br />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Lecturer Information -->
-        <div class="approval-lecturer-info">
-            <div class="approval-info-item">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
-            <div class="approval-info-item">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
-            <div class="approval-info-item">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
-            <div class="approval-info-item">Department: <span class="approval-info-value" data-field="department">NA</span></div>
-            <div class="approval-info-item">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
+        <div class="claim-form-column">
+            <div class="claim-form">
+                <h2>Claim Details</h2>
+                <div class="form-group">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
+                <div class="form-group">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
+                <div class="form-group">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
+                <div class="form-group">Department: <span class="approval-info-value" data-field="department">NA</span></div>
+                <div class="form-group">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
+                <hr class="approval-line-divider" />
 
-            <!-- First Divider -->
-            <div class="approval-line-divider"></div>
+                <div class="form-group">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
+                <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
+                <div class="form-group">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
+                <hr class="approval-line-divider" />
 
-            <div class="approval-info-item">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
-            <div class="approval-info-item">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
-            <div class="approval-info-item">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
-
-            <!-- Second Divider -->
-            <div class="approval-line-divider"></div>
-
-            <div class="approval-info-item">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
-            <div class="approval-info-item">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
-            <div class="approval-info-item">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
-
-            <div class="approval-line-divider"></div>
-            <div class="approval-info-item">Notes: <span class="approval-info-value" data-field="notes">NA</span></div>
-            <!-- Additional Manager Information -->
-            <div class="approval-line-divider"></div>
-            <div class="approval-info-item">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
-            <div class="approval-info-item">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
-            <div class="approval-info-item">Verification Date: <span class="approval-info-value" data-field="verificationDate">NA</span></div>
+                <div class="form-group">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
+                <div class="form-group">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
+                <div class="form-group">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
+                <hr class="approval-line-divider" />
+                <div class="form-group">Notes: <span class="approval-info-value" data-field="notes">NA</span></div>
+                <hr class="approval-line-divider" />
+                <div class="form-group">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
+                <div class="form-group">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
+                <div class="form-group">Verification Date: <span class="approval-info-value" data-field="verificationDate">NA</span></div>
+            </div>
         </div>
     </div>
 
     <!-- Approve/Reject Buttons -->
-    <div class="approval-approve-group">
-        <button class="approval-approve-button">Approve</button>
-    </div>
-
-    <div class="approval-reject-group">
-        <button class="approval-reject-button">Reject</button>
+    <div class="form-group">
+        <button class="btn-signin approval-approve-button">Approve</button>
+        <button class="btn-signin approval-reject-button" style="background-color: #e74c3c;">Reject</button>
     </div>
 </div>
 
@@ -93,7 +90,7 @@
                 type: 'GET',
                 data: { claimId: selectedClaimId }, // Send the claim ID
                 success: function (data) {
-                    $(".approval-info-item span.approval-info-value").each(function () {
+                    $(".approval-info-value").each(function () {
                         var key = $(this).data("field");
                         $(this).text(data[key] || "NA");
                     });
@@ -108,12 +105,12 @@
         $(".approval-approve-button").click(function () {
             if (selectedClaimId) {
                 $.ajax({
-                    url: '@Url.Action("ApproveClaim", "Approval")', // Your approve action
+                    url: '@Url.Action("ApproveClaim", "Approval")',
                     type: 'POST',
                     data: { id: selectedClaimId },
                     success: function () {
                         alert("Claim approved!");
-                        location.reload(); // Reload the page or update the UI as necessary
+                        location.reload();
                     },
                     error: function (error) {
                         console.log("Error approving claim:", error);
@@ -128,12 +125,12 @@
         $(".approval-reject-button").click(function () {
             if (selectedClaimId) {
                 $.ajax({
-                    url: '@Url.Action("RejectClaim", "Approval")', // Your reject action
+                    url: '@Url.Action("RejectClaim", "Approval")',
                     type: 'POST',
                     data: { id: selectedClaimId },
                     success: function () {
                         alert("Claim rejected!");
-                        location.reload(); // Reload the page or update the UI as necessary
+                        location.reload();
                     },
                     error: function (error) {
                         console.log("Error rejecting claim:", error);
@@ -145,116 +142,3 @@
         });
     });
 </script>
-@* @{
-    ViewData["Title"] = "Approval Page";
-    var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>; // Assuming you're passing similar data
-}
-
-<div class="approval-page">
-    <!-- Container for the Table and Lecturer Info -->
-    <div class="approval-content-container">
-        <!-- Table for Claims -->
-        <div class="approval-claim-list-box">
-            <table class="approval-claim-table">
-                <thead>
-                    <tr>
-                        <th>Claim ID</th>
-                        <th>Claim Date</th>
-                        <th>Documents</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var claim in Model)
-                    {
-                        <tr class="claim-row" data-claim-id="@claim.ClaimId">
-                            <td>@claim.ClaimId</td>
-                            <td>@claim.SubmissionDate.ToString("yyyy-MM-dd")</td>
-                            <td>
-                                @foreach (var document in claim.Documents)
-                                {
-                                    <span>@document.DocumentName</span>
-                                    <br />
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Lecturer Information -->
-        <div class="approval-lecturer-info">
-            <div class="approval-info-item">Lecturer ID: <span class="approval-info-value" data-field="lecturerId">NA</span></div>
-            <div class="approval-info-item">Full Name: <span class="approval-info-value" data-field="fullName">NA</span></div>
-            <div class="approval-info-item">Hourly Rate: <span class="approval-info-value" data-field="hourlyRate">NA</span></div>
-            <div class="approval-info-item">Department: <span class="approval-info-value" data-field="department">NA</span></div>
-            <div class="approval-info-item">Campus: <span class="approval-info-value" data-field="campus">NA</span></div>
-
-            <!-- First Divider -->
-            <div class="approval-line-divider"></div>
-
-            <div class="approval-info-item">Regular Hours Worked: <span class="approval-info-value" data-field="hoursWorked">NA</span></div>
-            <div class="approval-info-item">Overtime Hours Worked: <span class="approval-info-value" data-field="overtimeWorked">NA</span></div>
-            <div class="approval-info-item">Total Hours Worked: <span class="approval-info-value" data-field="totalHours">NA</span></div>
-
-            <!-- Second Divider -->
-            <div class="approval-line-divider"></div>
-
-            <div class="approval-info-item">Regular Pay: <span class="approval-info-value" data-field="regularPay">NA</span></div>
-            <div class="approval-info-item">Overtime Pay: <span class="approval-info-value" data-field="overtimePay">NA</span></div>
-            <div class="approval-info-item">Total Pay: <span class="approval-info-value" data-field="totalPay">NA</span></div>
-
-            <!-- Additional Manager Information -->
-            <div class="approval-line-divider"></div>
-            <div class="approval-info-item">Coordinator ID: <span class="approval-info-value" data-field="coordinatorId">NA</span></div>
-            <div class="approval-info-item">Coordinator Name: <span class="approval-info-value" data-field="coordinatorName">NA</span></div>
-            <div class="approval-info-item">Verification Date: <span class="approval-info-value" data-field="InteractionDate">NA</span></div>
-        </div>
-    </div>
-
-    <!-- Approve/Reject Buttons -->
-    <div class="approval-approve-group">
-        <button class="approval-approve-button">Approve</button>
-    </div>
-
-    <div class="approval-reject-group">
-        <button class="approval-reject-button">Reject</button>
-    </div>
-</div>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Handle row click
-        $(".claim-row").click(function () {
-            var claimId = $(this).data("claim-id");
-
-            // Send AJAX request to fetch claim details
-            $.ajax({
-                url: '@Url.Action("GetClaimDetailsApproved", "Approval")', // Updated action name
-                type: 'GET',
-                data: { claimId: claimId }, // Send the claim ID
-                success: function (data) {
-                    $(".approval-info-item span.approval-info-value").each(function () {
-                        var key = $(this).data("field"); // Use the data-field attribute
-                        $(this).text(data[key] || "NA"); // Use data[key] or fallback to "NA"
-                    });
-                },
-                error: function (error) {
-                    console.log("Error fetching claim details:", error);
-                }
-            });
-        });
-
-        // Approve/Reject button functionality (you'll need to implement the action methods)
-        $(".approval-approve-button").click(function () {
-            // Implement approve functionality
-        });
-
-        $(".approval-reject-button").click(function () {
-            // Implement reject functionality
-        });
-    });
-</script>
-
- *@

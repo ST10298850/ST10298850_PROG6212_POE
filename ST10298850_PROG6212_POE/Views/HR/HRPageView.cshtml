@@ -3,93 +3,102 @@
     var claims = ViewBag.Claims as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
 
-<div style="display: flex; gap: 20px;">
+<div class="HR-claim-main-content">
     <!-- Claims Table -->
-    <div style="flex: 2;">
+    <div class="HR-table-container">
         <h2>Claims</h2>
-        <form method="get" action="@Url.Action("HRPageView", "HR")">
-            <label for="filterType">Filter by:</label>
-            <select name="filterType" id="filterType">
-                <option value="date">Date</option>
-                <option value="status">Status</option>
-                <option value="userid">User ID</option>
-            </select>
-            <input type="text" name="filterValue" placeholder="Enter filter value" />
-            <button type="submit">Filter</button>
+        <form method="get" action="@Url.Action("HRPageView", "HR")" class="HR-filter-form">
+            <div class="HR-form-group">
+                <label for="filterType">Filter by:</label>
+                <select name="filterType" id="filterType" class="HR-form-control">
+                    <option value="date">Date</option>
+                    <option value="status">Status</option>
+                    <option value="userid">User ID</option>
+                </select>
+            </div>
+            <div class="HR-form-group">
+                <input type="text" name="filterValue" placeholder="Enter filter value" class="HR-form-control" />
+            </div>
+            <button type="submit" class="HR-btn-submit">Filter</button>
         </form>
 
-        <table border="1" style="width: 100%; margin-top: 20px;">
-            <thead>
-                <tr>
-                    <th>Claim ID</th>
-                    <th>User ID</th>
-                    <th>Status</th>
-                    <th>Submission Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (claims != null && claims.Any())
-                {
-                    foreach (var claim in claims)
+        <div class="HR-table-wrapper">
+            <table class="HR-table HR-claim-history-table">
+                <thead>
+                    <tr>
+                        <th>Claim ID</th>
+                        <th>User ID</th>
+                        <th>Status</th>
+                        <th>Submission Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (claims != null && claims.Any())
+                    {
+                        foreach (var claim in claims)
+                        {
+                            <tr>
+                                <td>@claim.ClaimId</td>
+                                <td>@claim.LecturerId</td>
+                                <td>@claim.Status</td>
+                                <td>@claim.SubmissionDate.ToShortDateString()</td>
+                                <td>
+                                    <a href="#" class="HR-btn-action">View</a>
+                                    <a href="#" class="HR-btn-action">Edit</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>@claim.ClaimId</td>
-                            <td>@claim.LecturerId</td>
-                            <td>@claim.Status</td>
-                            <td>@claim.SubmissionDate.ToShortDateString()</td>
-                            <td>
-                                <a href="#">View</a>
-                                <a href="#">Edit</a>
-                            </td>
+                            <td colspan="5">No claims found.</td>
                         </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="5">No claims found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Users Table -->
-    <div style="flex: 1;">
+    <div class="HR-table-container">
         <h2>Users</h2>
-        <table border="1" style="width: 100%;">
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model != null && Model.Any())
-                {
-                    foreach (var user in Model)
+        <div class="HR-table-wrapper">
+            <!-- Add wrapper for scrolling -->
+            <table class="HR-table HR-users-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@user.LecturerId</td>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <button onclick="editUser(@user.LecturerId)" class="HR-btn-edit">Edit</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td>@user.LecturerId</td>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>
-                                <button onclick="editUser(@user.LecturerId)">Edit</button>
-                            </td>
+                            <td colspan="4">No users found.</td>
                         </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="4">No users found.</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
