@@ -10,14 +10,14 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <div class="signup-page">
-        <div class="signup-form-container">
-            <h2>Sign Up</h2>
-            <form asp-controller="SignUp" asp-action="SignUp" class="signup-form" method="post">
+    <div class="register-page">
+        <div class="register-form-container">
+            <h2 class="register-heading">Create Your Account</h2>
+            <form asp-controller="SignUp" asp-action="SignUp" method="post" class="register-form">
                 <!-- Role Selection -->
                 <div class="form-group">
                     <label for="role">Select Role:</label>
-                    <select id="role" name="role" class="form-control" onchange="toggleUserFields()" required>
+                    <select id="role" name="role" class="form-control register-select" onchange="toggleUserFields()" required>
                         <option value="">--Select Role--</option>
                         <option value="Lecturer">Lecturer</option>
                         <option value="Coordinator">Coordinator</option>
@@ -28,48 +28,49 @@
 
                 <!-- Common Fields -->
                 <div class="form-group">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" class="form-control" required>
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your full name" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" class="form-control" required>
-                </div><div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="example@example.com" required>
+                </div>
+                <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" class="form-control" required>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Choose a strong password" required>
                 </div>
 
-                <!-- Lecturer Specific Fields -->
-                <div id="lecturer-fields" style="display: none;">
+                <!-- Lecturer Fields -->
+                <div id="lecturer-fields" class="register-role-fields" style="display: none;">
                     <div class="form-group">
                         <label for="department">Department:</label>
-                        <input type="text" id="department" name="department" class="form-control">
+                        <input type="text" id="department" name="department" class="form-control" placeholder="Enter department">
                     </div>
                     <div class="form-group">
                         <label for="campus">Campus:</label>
-                        <input type="text" id="campus" name="campus" class="form-control">
+                        <input type="text" id="campus" name="campus" class="form-control" placeholder="Enter campus">
                     </div>
                 </div>
 
-                <!-- Academic Manager Specific Fields -->
-                <div id="academic-manager-fields" style="display: none;">
+                <!-- Academic Manager Fields -->
+                <div id="academic-manager-fields" class="register-role-fields" style="display: none;">
                     <div class="form-group">
                         <label for="manager-department">Department:</label>
-                        <input type="text" id="manager-department" name="managerDepartment" class="form-control">
+                        <input type="text" id="manager-department" name="managerDepartment" class="form-control" placeholder="Enter department">
                     </div>
                 </div>
 
-                <!-- Coordinator Specific Fields -->
-                <div id="coordinator-fields" style="display: none;">
+                <!-- Coordinator Fields -->
+                <div id="coordinator-fields" class="register-role-fields" style="display: none;">
                     <div class="form-group">
                         <label for="coordinator-department">Department:</label>
-                        <input type="text" id="coordinator-department" name="coordinatorDepartment" class="form-control">
+                        <input type="text" id="coordinator-department" name="coordinatorDepartment" class="form-control" placeholder="Enter department">
                     </div>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="form-group">
-                    <button type="submit">Sign Up</button>
+                    <button type="submit" class="btn-signin register-submit-button">Sign Up</button>
                 </div>
             </form>
         </div>
@@ -77,22 +78,26 @@
 
     <script>
         function toggleUserFields() {
-            var role = document.getElementById("role").value;
-            document.getElementById("lecturer-fields").style.display = "none";
-            document.getElementById("academic-manager-fields").style.display = "none";
-            document.getElementById("coordinator-fields").style.display = "none";
+            const role = document.getElementById("role").value;
+            const roleFields = {
+                Lecturer: document.getElementById("lecturer-fields"),
+                AcademicManager: document.getElementById("academic-manager-fields"),
+                Coordinator: document.getElementById("coordinator-fields")
+            };
 
-            if (role === "Lecturer") {
-                document.getElementById("lecturer-fields").style.display = "block";
-            } else if (role === "AcademicManager") {
-                document.getElementById("academic-manager-fields").style.display = "block";
-            } else if (role === "Coordinator") {
-                document.getElementById("coordinator-fields").style.display = "block";
+            // Hide all role-specific fields
+            for (let field in roleFields) {
+                roleFields[field].style.display = "none";
+            }
+
+            // Show selected role fields
+            if (roleFields[role]) {
+                roleFields[role].style.display = "block";
             }
         }
 
         window.onload = function () {
-            var userId = '@ViewBag.UserId';
+            const userId = '@ViewBag.UserId';
             if (userId) {
                 alert('Your User ID is: ' + userId);
             }

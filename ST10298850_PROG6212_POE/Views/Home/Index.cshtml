@@ -14,19 +14,15 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <header class="navbar">
-        <div class="navbar-container">
-            <!-- Add Navbar Content Here -->
-        </div>
-    </header>
+
 
     <!-- Main Content Area -->
-    <div class="signup-page">
-        <div class="signup-form-container">
-            <h1>Welcome to the Claim Wages System</h1>
+    <div class="register-page">
+        <div class="register-form-container">
+            <h1 class="register-heading">Welcome to the Claim Wages System</h1>
             <p>Please select your role to continue:</p>
 
-            <form asp-controller="Role" asp-action="SelectRole" id="role-selection-form" method="post" class="signup-form">
+            <form asp-controller="Role" asp-action="SelectRole" id="role-selection-form" method="post" class="register-form">
                 <!-- Role Selection -->
                 <div class="form-group">
                     <label for="role" class="role-label">Select Role:</label>
