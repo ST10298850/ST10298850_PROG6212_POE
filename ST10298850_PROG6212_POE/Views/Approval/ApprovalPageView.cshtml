@@ -3,14 +3,15 @@
     var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
 
-<div class="claim-main-content">
-    <!-- Container for the Table and Lecturer Info -->
-    <div class="claim-container">
-        <!-- Table for Claims -->
-        <div class="claim-history-column">
-            <div class="claim-history">
-                <h2>Pending Claims</h2>
-                <table class="claim-history-table">
+
+<!-- Container for the Table and Lecturer Info -->
+<div class="claim-container">
+    <!-- Table for Claims -->
+    <div class="claim-history-column">
+        <div class="claim-history">
+            <h2>Pending Claims</h2>
+            <div class="HR-table-wrapper">
+                <table class="HR-table HR-claim-history-table">
                     <thead>
                         <tr>
                             <th>Claim ID</th>
@@ -36,49 +37,51 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-
-        <!-- Lecturer Information -->
-        <div class="claim-form-column">
-            <div class="claim-form">
-                <h2>Claim Details</h2>
-                <div class="form-group">Lecturer ID: <span class="approval-info-value" id="lecturerId">NA</span></div>
-                <div class="form-group">Full Name: <span class="approval-info-value" id="fullName">NA</span></div>
-                <div class="form-group">Hourly Rate: <span class="approval-info-value" id="hourlyRate">NA</span></div>
-                <div class="form-group">Department: <span class="approval-info-value" id="department">NA</span></div>
-                <div class="form-group">Campus: <span class="approval-info-value" id="campus">NA</span></div>
-                <hr class="approval-line-divider" />
-
-                <div class="form-group">Regular Hours Worked: <span class="approval-info-value" id="hoursWorked">NA</span></div>
-                <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" id="overtimeWorked">NA</span></div>
-                <div class="form-group">Total Hours Worked: <span class="approval-info-value" id="totalHours">NA</span></div>
-                <hr class="approval-line-divider" />
-
-                <div class="form-group">Regular Pay: <span class="approval-info-value" id="regularPay">NA</span></div>
-                <div class="form-group">Overtime Pay: <span class="approval-info-value" id="overtimePay">NA</span></div>
-                <div class="form-group">Total Pay: <span class="approval-info-value" id="totalPay">NA</span></div>
-                <hr class="approval-line-divider" />
-                <div class="form-group">Notes: <span class="approval-info-value" id="notes">NA</span></div>
-
-                <hr class="approval-line-divider" />
-                <label>Claim Validity:</label>
-                <div class="form-group">Hourly Rate Validity: <span class="approval-info-value" id="validHourlyRate">NA</span></div>
-                <div class="form-group">Hours Worked Validity: <span class="approval-info-value" id="validHoursWorked">NA</span></div>
-                <div class="form-group">Overtime Worked Validity: <span class="approval-info-value" id="validOvertimeWorked">NA</span></div>
-            </div><hr class="approval-line-divider" />
+            <hr class="approval-line-divider" />
+            <label>Claim Validity:</label>
+            <div class="form-group">Hourly Rate Validity: <span class="approval-info-value" id="validHourlyRate">NA</span></div>
+            <div class="form-group">Hours Worked Validity: <span class="approval-info-value" id="validHoursWorked">NA</span></div>
+            <div class="form-group">Overtime Worked Validity: <span class="approval-info-value" id="validOvertimeWorked">NA</span></div>
+            <hr class="approval-line-divider" />
             <div class="form-group">Coordinator ID: <span class="approval-info-value" id="coordinatorId">NA</span></div>
             <div class="form-group">Coordinator Name: <span class="approval-info-value" id="coordinatorName">NA</span></div>
             <div class="form-group">Verification Date: <span class="approval-info-value" id="verificationDate">NA</span></div>
         </div>
     </div>
 
+    <!-- Lecturer Information -->
+    <div class="claim-form-column">
+        <div class="claim-form">
+            <h2>Claim Details</h2>
+            <div class="form-group">Lecturer ID: <span class="approval-info-value" id="lecturerId">NA</span></div>
+            <div class="form-group">Full Name: <span class="approval-info-value" id="fullName">NA</span></div>
+            <div class="form-group">Hourly Rate: <span class="approval-info-value" id="hourlyRate">NA</span></div>
+            <div class="form-group">Department: <span class="approval-info-value" id="department">NA</span></div>
+            <div class="form-group">Campus: <span class="approval-info-value" id="campus">NA</span></div>
+            <hr class="approval-line-divider" />
 
-    <!-- Approve/Reject Buttons -->
-    <div class="form-group">
-        <button class="btn-signin approval-approve-button">Approve</button>
-        <button class="btn-signin approval-reject-button" style="background-color: #e74c3c;">Reject</button>
+            <div class="form-group">Regular Hours Worked: <span class="approval-info-value" id="hoursWorked">NA</span></div>
+            <div class="form-group">Overtime Hours Worked: <span class="approval-info-value" id="overtimeWorked">NA</span></div>
+            <div class="form-group">Total Hours Worked: <span class="approval-info-value" id="totalHours">NA</span></div>
+            <hr class="approval-line-divider" />
+
+            <div class="form-group">Regular Pay: <span class="approval-info-value" id="regularPay">NA</span></div>
+            <div class="form-group">Overtime Pay: <span class="approval-info-value" id="overtimePay">NA</span></div>
+            <div class="form-group">Total Pay: <span class="approval-info-value" id="totalPay">NA</span></div>
+            <hr class="approval-line-divider" />
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes" class="form-control" rows="3" required></textarea>
+                <!-- Approve/Reject Buttons -->
+                <div class="form-group">
+                    <button class="btn-approval">Approve</button>
+                    <button class="btn-approval btn-reject">Reject</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -140,37 +143,8 @@
                 $.ajax({
                     url: '@Url.Action("ApproveClaim", "Approval")',
                     type: 'POST',
-                    data: { id: selectedClaimId },
-                    success: function () {
-                        alert("Claim approved!");
-                        location.reload();
-                    },
-                    error: function (error) {
-                        console.log("Error approving claim:", error);
-                    }
+                    data: { id: selectedClaimId }
                 });
-            } else {
-                alert("Please select a claim to approve.");
-            }
-        });
-
-        // Reject button click handler
-        $(".approval-reject-button").click(function () {
-            if (selectedClaimId) {
-                $.ajax({
-                    url: '@Url.Action("RejectClaim", "Approval")',
-                    type: 'POST',
-                    data: { id: selectedClaimId },
-                    success: function () {
-                        alert("Claim rejected!");
-                        location.reload();
-                    },
-                    error: function (error) {
-                        console.log("Error rejecting claim:", error);
-                    }
-                });
-            } else {
-                alert("Please select a claim to reject.");
             }
         });
     });

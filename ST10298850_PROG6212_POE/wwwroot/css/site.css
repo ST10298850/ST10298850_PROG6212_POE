@@ -46,7 +46,6 @@ header.navbar {
     display: flex;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
     gap: 20px; /* Adds spacing between sections */
     align-items: flex-start; /* Aligns form and table at the top */
 }
@@ -58,8 +57,8 @@ header.navbar {
 }
 
 .claim-history-column {
-    flex: 1; /* Table takes up one part of the space */
-    max-width: 50%; /* Limits the width of the history column */
+     /* Table takes up one part of the space */
+    max-width: 100%; /* Limits the width of the history column */
 }
 
 /* Form Styling */
@@ -164,6 +163,32 @@ button {
         transform: scale(1.02);
     }
 
+/* Unified Button Styling */
+.btn-approval {
+    background-color: #3498db; /* Default color for approve button */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+    .btn-approval:hover {
+        transform: scale(1.05);
+    }
+
+.btn-reject {
+    background-color: #e74c3c; /* Color for reject button */
+}
+
+    .btn-reject:hover {
+        background-color: #c0392b;
+    }
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .claim-container {
@@ -174,6 +199,7 @@ button {
     .claim-history-column {
         max-width: 100%;
     }
+
 }
 
 /* ------------------------The following css is only for the HR view, I did not want to alter my first set of css classes again------------------------*/
@@ -305,6 +331,7 @@ button:hover {
 
 .HR-claim-history-table tr:nth-child(even) {
     background-color: #f2f2f2;
+    width:100%;
 }
 
 .HR-users-table tr:nth-child(even) {

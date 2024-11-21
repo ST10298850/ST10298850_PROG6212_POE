@@ -2,7 +2,7 @@
 @{
     var claims = ViewBag.Claims as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="HR-claim-main-content">
     <!-- Claims Table -->
     <div class="HR-table-container">
@@ -14,6 +14,7 @@
                     <option value="date">Date</option>
                     <option value="status">Status</option>
                     <option value="userid">User ID</option>
+
                 </select>
             </div>
             <div class="HR-form-group">
@@ -108,27 +109,32 @@
 </div>
 
 <!-- JavaScript Section -->
+
 <script>
+    // When a filter is applied
     // Update the report generation form based on current filters
-    document.querySelector('.HR-filter-form').addEventListener('submit', function (e) {
-        const filterType = document.querySelector('#filterType').value;
-        const filterValue = document.querySelector('[name="filterValue"]').value;
+    $('#generateReportButton').on('click', function () {
+        const filterType = $('#filterTypeInput').val(); // Get the current filter type
+        const filterValue = $('#filterValueInput').val(); // Get the current filter value
 
-        // Update hidden fields in the report form
-        document.querySelector('#hiddenFilterType').value = filterType;
-        document.querySelector('#hiddenFilterValue').value = filterValue;
+        console.log("Generating report with filter type:", filterType, "and filter value:", filterValue);
+
+        // Construct the report URL with the current filters
+        const reportUrl = `/ControllerName/GenerateReport?filterType=${filterType}&filterValue=${filterValue}`;
+
+        // Redirect to the URL for report generation (downloads the file)
+        window.location.href = reportUrl;
     });
 
-    // Ensure the report button submits the correct filter data
-    document.querySelector('.HR-btn-generate-report').addEventListener('click', function (e) {
-        const filterType = document.querySelector('#filterType').value;
-        const filterValue = document.querySelector('[name="filterValue"]').value;
+    // Optional: If you apply filters dynamically and need to track them in hidden fields
+    $('#applyFiltersButton').on('click', function () {
+        const filterType = $('#filterType').val();
+        const filterValue = $('#filterValue').val();
 
-        // Update hidden fields in the report form
-        document.querySelector('#hiddenFilterType').value = filterType;
-        document.querySelector('#hiddenFilterValue').value = filterValue;
+        // Update hidden fields for report generation
+        $('#hiddenFilterType').val(filterType);
+        $('#hiddenFilterValue').val(filterValue);
     });
-
     // Function to edit user details
     function editUser(userId) {
         const name = prompt("Enter new name:");

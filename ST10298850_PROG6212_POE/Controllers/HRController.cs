@@ -69,10 +69,13 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             return RedirectToAction("HRPageView");
         }
-
+        [HttpPost]
         public async Task<IActionResult> GenerateReport(string filterType, string filterValue)
         {
-            // Fetch and filter claims as in HRPageView
+            // Log the filter values to ensure they are being received correctly
+            Console.WriteLine($"Received filterType: {filterType}, filterValue: {filterValue}");
+
+            // Ensure that filterType and filterValue are correctly used
             var claims = _context.Claims.AsQueryable();
 
             if (!string.IsNullOrEmpty(filterType) && !string.IsNullOrEmpty(filterValue))
@@ -88,7 +91,7 @@ namespace ST10298850_PROG6212_POE.Controllers
                         break;
                     case "userid":
                         if (int.TryParse(filterValue, out var userId))
-                            claims = claims.Where(c => c.LecturerId == userId);
+                            claims = claims.Where(c => c.LecturerId == userId);  // Assuming `LecturerId` is the field to filter by
                         break;
                 }
             }
