@@ -40,6 +40,11 @@ namespace ST10298850_PROG6212_POE.Controllers
                 return NotFound();
             }
 
+            // Validate the claim
+            bool isValidHourlyRate = IsClaimValid(claim).Item1;
+            bool isValidHoursWorked = IsClaimValid(claim).Item2;
+            bool isValidOvertimeWorked = IsClaimValid(claim).Item3;
+
             // Prepare data to return in JSON format
             var claimDetails = new
             {
@@ -54,7 +59,11 @@ namespace ST10298850_PROG6212_POE.Controllers
                 RegularPay = (claim.HoursWorked * claim.HourlyRate).ToString("C"),
                 OvertimePay = (claim.OvertimeWorked * (claim.HourlyRate * 1.5M)).ToString("C"), // Assume 1.5x for overtime
                 TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C"),
-                Notes = claim.Notes
+                Notes = claim.Notes,
+                // Include validation results
+                isValidHourlyRate,
+                isValidHoursWorked,
+                isValidOvertimeWorked
             };
 
             // Return the data as JSON
@@ -150,6 +159,20 @@ namespace ST10298850_PROG6212_POE.Controllers
             }
 
             return NotFound(); // If claim not found
+        }
+        private (bool isHourlyRateValid, bool isHoursWorkedValid, bool isOvertimeValid) IsClaimValid(LecturerClaimModel claim)
+        {
+            // Hourly Rate validation (50 - 400)
+            bool isHourlyRateValid = claim.HourlyRate >= 50 && claim.HourlyRate <= 400;
+
+            // Hours Worked validation (35 - 80)
+            bool isHoursWorkedValid = claim.HoursWorked >= 35 && claim.HoursWorked <= 80;
+
+            // Overtime validation (cannot exceed 10 hours)
+            bool isOvertimeValid = claim.OvertimeWorked <= 10;
+
+            // Return tuple with all validation results
+            return (isHourlyRateValid, isHoursWorkedValid, isOvertimeValid);
         }
     }
 }
