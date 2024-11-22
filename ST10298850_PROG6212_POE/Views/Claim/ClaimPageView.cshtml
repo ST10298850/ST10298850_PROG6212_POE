@@ -119,10 +119,10 @@
                         // Add a clickable row with the data-claim-id attribute
                         claimsTableBody.append(
                             `<tr class="clickable-row" data-claim-id="${claimId}">
-                                <td>${claimId}</td>
-                                <td>${formattedDate}</td>
-                                <td>${status}</td>
-                            </tr>`
+                                    <td>${claimId}</td>
+                                    <td>${formattedDate}</td>
+                                    <td>${status}</td>
+                                </tr>`
                         );
                     });
                 } else {
@@ -166,9 +166,20 @@
         });
     }
 
-
     $(document).ready(function () {
         console.log("Page loaded.");
         loadClaims();
+
+        // Client-side validation
+        $('form').submit(function (event) {
+            var hoursWorked = parseFloat($('#hours').val());
+            var hourlyRate = parseFloat($('#hourlyRate').val());
+
+            if (hoursWorked <= 0 || hourlyRate <= 0) {
+                alert('Hours Worked and Hourly Rate must be greater than zero.');
+                event.preventDefault(); // Prevent form submission
+            }
+        });
     });
 </script>
+

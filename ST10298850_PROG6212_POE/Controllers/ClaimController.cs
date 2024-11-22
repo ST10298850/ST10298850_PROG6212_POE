@@ -112,6 +112,13 @@ namespace ST10298850_PROG6212_POE.Controllers
                 return RedirectToAction("ClaimPageView");
             }
 
+            // Validate hoursWorked and hourlyRate
+            if (hoursWorked <= 0 || hourlyRate <= 0)
+            {
+                TempData["ErrorMessage"] = "Hours Worked and Hourly Rate must be greater than zero.";
+                return RedirectToAction("ClaimPageView");
+            }
+
             // File validation logic
             if (documentFile != null && documentFile.Length > 0)
             {
@@ -191,5 +198,6 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             return RedirectToAction("ClaimPageView");
         }
+
     }
 }
