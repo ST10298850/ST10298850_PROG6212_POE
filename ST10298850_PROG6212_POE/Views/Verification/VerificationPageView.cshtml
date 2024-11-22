@@ -3,7 +3,6 @@
     var claims = Model as List<ST10298850_PROG6212_POE.Models.LecturerClaimModel>;
 }
 
-
 <!-- Container for the Table and Lecturer Info -->
 <div class="claim-container">
     <!-- Table for Claims -->
@@ -52,7 +51,6 @@
                 <div class="form-group">Hourly Rate Validity: <span class="approval-info-value" id="validHourlyRate">NA</span></div>
                 <div class="form-group">Hours Worked Validity: <span class="approval-info-value" id="validHoursWorked">NA</span></div>
                 <div class="form-group">Overtime Worked Validity: <span class="approval-info-value" id="validOvertimeWorked">NA</span></div>
-
             </div>
         </div>
     </div>
@@ -78,16 +76,15 @@
             <div class="form-group">
                 <label for="notes">Notes:</label>
                 <textarea id="notes" name="notes" class="form-control" rows="3" readonly></textarea>
-                <button class="btn-approval">Approve</button>
-                <button class="btn-approval btn-reject">Reject</button>
+                <button class="btn-approval approval-approve-button">Approve</button>
+                <button class="btn-approval approval-reject-button">Reject</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Approve/Reject Buttons -->
-
-
+<!-- Error message container -->
+<div id="error-message" style="display:none; color:red;"></div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
@@ -123,6 +120,7 @@
                 },
                 error: function (error) {
                     console.log("Error fetching claim details:", error);
+                    $("#error-message").text("Error fetching claim details. Please try again later.").show();
                 }
             });
         });
@@ -140,6 +138,7 @@
                     },
                     error: function (error) {
                         console.log("Error approving claim:", error);
+                        $("#error-message").text("Error approving claim. Please try again later.").show();
                     }
                 });
             } else {
@@ -159,6 +158,7 @@
                     },
                     error: function (error) {
                         console.log("Error rejecting claim:", error);
+                        $("#error-message").text("Error rejecting claim. Please try again later.").show();
                     }
                 });
             } else {

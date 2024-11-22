@@ -44,14 +44,13 @@
                     {
                         foreach (var claim in claims)
                         {
-                            <tr>
+                            <tr id="claim-@claim.ClaimId">
                                 <td>@claim.ClaimId</td>
                                 <td>@claim.LecturerId</td>
                                 <td>@claim.Status</td>
                                 <td>@claim.SubmissionDate.ToShortDateString()</td>
                                 <td>
-                                    <a href="#" class="HR-btn-action">View</a>
-                                    <a href="#" class="HR-btn-action">Edit</a>
+                                    <button onclick="generateInvoice(@claim.ClaimId)" class="HR-btn-action">Invoice</button>
                                 </td>
                             </tr>
                         }
@@ -104,8 +103,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- Edit User Form -->
-        <div class="HR-edit-user-form"">
+        <div class="HR-edit-user-form">
             <h2>Edit User</h2>
             <form id="editUserForm">
                 <input type="hidden" id="editUserId" />
@@ -123,7 +121,6 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
         // Initialize event listeners
@@ -133,25 +130,39 @@
     function initializeEventListeners() {
         $('#generateReport').on('click', function (e) {
             e.preventDefault();
-            const filterType = $('#filterType').val();
-            const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
-            $.ajax({
-                url: '@Url.Action("GenerateReport", "HR")',
-                type: 'GET',
-                data: { filterType, filterValue },
-                success: function (response) {
-                    const link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(new Blob([response], { type: 'text/csv' }));
-                    link.download = `ClaimsReport_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error generating report:", error);
-                    alert("An error occurred while generating the report. Please try again.");
+            try {
+                const filterType = $('#filterType').val();
+                const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
+                if (!filterValue) {
+                    alert("Please provide a filter value.");
+                    return;
                 }
-            });
+                $.ajax({
+                    url: '@Url.Action("GenerateReport", "HR")',
+                    type: 'GET',
+                    data: { filterType, filterValue },
+                    success: function (response) {
+                        try {
+                            const link = document.createElement('a');
+                            link.href = window.URL.createObjectURL(new Blob([response], { type: 'text/plain' }));
+                            link.download = `ClaimsReport_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        } catch (error) {
+                            console.error("Error processing report:", error);
+                            alert("An error occurred while processing the report. Please try again.");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error generating report:", error);
+                        alert("An error occurred while generating the report. Please try again.");
+                    }
+                });
+            } catch (error) {
+                console.error("Unexpected error:", error);
+                alert("An unexpected error occurred. Please try again.");
+            }
         });
 
         $('#filterForm').on('change', 'select, input', function () {
@@ -166,19 +177,30 @@
         });
 
         function applyFilters() {
-            const filterType = $('#filterType').val();
-            const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
-            $.ajax({
-                url: '@Url.Action("HRPageView", "HR")',
-                method: 'GET',
-                data: { filterType, filterValue },
-                success: function (data) {
-                    $('.HR-claim-history-table tbody').html($(data).find('.HR-claim-history-table tbody').html());
-                },
-                error: function (err) {
-                    console.error('Error fetching claims:', err);
-                }
-            });
+            try {
+                const filterType = $('#filterType').val();
+                const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
+                $.ajax({
+                    url: '@Url.Action("HRPageView", "HR")',
+                    method: 'GET',
+                    data: { filterType, filterValue },
+                    success: function (data) {
+                        try {
+                            $('.HR-claim-history-table tbody').html($(data).find('.HR-claim-history-table tbody').html());
+                        } catch (error) {
+                            console.error("Error updating table:", error);
+                            alert("An error occurred while updating the table. Please try again.");
+                        }
+                    },
+                    error: function (err) {
+                        console.error('Error fetching claims:', err);
+                        alert("An error occurred while fetching claims. Please try again.");
+                    }
+                });
+            } catch (error) {
+                console.error("Unexpected error:", error);
+                alert("An unexpected error occurred. Please try again.");
+            }
         }
 
         $('#filterType').on('change', function () {
@@ -211,29 +233,74 @@
     }
 
     function saveUser() {
-        const userId = $('#editUserId').val();
-        const name = $('#editUserName').val();
-        const email = $('#editUserEmail').val();
-        if (name && email) {
-            fetch('/HR/UpdateUser', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ LecturerId: userId, Name: name, Email: email })
-            }).then(response => {
-                if (response.ok) {
-                    alert("User details updated successfully.");
-                    window.location.reload();
-                } else {
-                    alert("Failed to update user details.");
-                }
-            }).catch(error => {
-                console.error("Error updating user details:", error);
-                alert("An error occurred while updating user details.");
-            });
+        try {
+            const userId = $('#editUserId').val();
+            const name = $('#editUserName').val();
+            const email = $('#editUserEmail').val();
+            if (name && email) {
+                const formData = new URLSearchParams();
+                formData.append('userID', userId);
+                formData.append('name', name);
+                formData.append('email', email);
+
+                fetch('/HR/UpdateUser', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                }).then(response => {
+                    if (response.ok) {
+                        alert("User details updated successfully.");
+                        window.location.reload();
+                    } else {
+                        alert("Failed to update user details.");
+                    }
+                }).catch(error => {
+                    console.error("Error updating user details:", error);
+                    alert("An error occurred while updating user details.");
+                });
+            } else {
+                alert("Please fill in all fields.");
+            }
+        } catch (error) {
+            console.error("Unexpected error:", error);
+            alert("An unexpected error occurred. Please try again.");
         }
     }
+
+
 
     function cancelEdit() {
         $('.HR-edit-user-form').hide();
     }
+
+    function generateInvoice(claimId) {
+        try {
+            $.ajax({
+                url: '@Url.Action("GenerateInvoice", "HR")',
+                type: 'GET',
+                data: { id: claimId },
+                success: function (response) {
+                    try {
+                        const link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(new Blob([response], { type: 'text/plain' }));
+                        link.download = `Invoice_${claimId}.txt`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (error) {
+                        console.error("Error processing invoice:", error);
+                        alert("An error occurred while processing the invoice. Please try again.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error generating invoice:", error);
+                    alert("An error occurred while generating the invoice. Please try again.");
+                }
+            });
+        } catch (error) {
+            console.error("Unexpected error:", error);
+            alert("An unexpected error occurred. Please try again.");
+        }
+    }
 </script>
+

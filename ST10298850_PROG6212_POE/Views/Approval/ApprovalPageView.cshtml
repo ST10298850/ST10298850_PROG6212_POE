@@ -71,11 +71,11 @@
             <hr class="approval-line-divider" />
             <div class="form-group">
                 <label for="notes">Notes:</label>
-                <textarea id="notes" name="notes" class="form-control" rows="3" required></textarea>
+                <textarea id="notes" name="notes" class="form-control" rows="3" readonly></textarea>
                 <!-- Approve/Reject Buttons -->
                 <div class="form-group">
-                    <button class="btn-approval">Approve</button>
-                    <button class="btn-approval btn-reject">Reject</button>
+                    <button class="btn-approval approval-approve-button">Approve</button>
+                    <button class="btn-approval approval-reject-button">Reject</button>
                 </div>
             </div>
         </div>
@@ -83,6 +83,7 @@
 </div>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
@@ -95,9 +96,9 @@
 
             // Send AJAX request to fetch claim details
             $.ajax({
-                url: '@Url.Action("GetClaimDetailsApproved", "Approval")', // Updated action name
+                url: '@Url.Action("GetClaimDetailsApproved", "Approval")',
                 type: 'GET',
-                data: { claimId: selectedClaimId }, // Send the claim ID
+                data: { claimId: selectedClaimId },
                 success: function (data) {
                     // Map claim details to their respective fields by ID
                     $("#lecturerId").text(data.lecturerId || "NA");
@@ -143,9 +144,39 @@
                 $.ajax({
                     url: '@Url.Action("ApproveClaim", "Approval")',
                     type: 'POST',
-                    data: { id: selectedClaimId }
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim approved!");
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log("Error approving claim:", error);
+                    }
                 });
+            } else {
+                alert("Please select a claim to approve.");
+            }
+        });
+
+        // Reject button click handler
+        $(".approval-reject-button").click(function () {
+            if (selectedClaimId) {
+                $.ajax({
+                    url: '@Url.Action("RejectClaim", "Approval")',
+                    type: 'POST',
+                    data: { id: selectedClaimId },
+                    success: function () {
+                        alert("Claim rejected!");
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log("Error rejecting claim:", error);
+                    }
+                });
+            } else {
+                alert("Please select a claim to reject.");
             }
         });
     });
 </script>
+
