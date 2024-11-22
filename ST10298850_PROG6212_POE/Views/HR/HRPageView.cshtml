@@ -7,21 +7,29 @@
     <!-- Claims Table -->
     <div class="HR-table-container">
         <h2>Claims</h2>
-        <form method="get" action="@Url.Action("HRPageView", "HR")" class="HR-filter-form">
+        <form id="filterForm" class="HR-filter-form">
             <div class="HR-form-group">
                 <label for="filterType">Filter by:</label>
                 <select name="filterType" id="filterType" class="HR-form-control">
-                    <option value="date">Date</option>
                     <option value="status">Status</option>
                     <option value="userid">User ID</option>
-
                 </select>
             </div>
-            <div class="HR-form-group">
-                <input type="text" name="filterValue" placeholder="Enter filter value" class="HR-form-control" />
+            <div class="HR-form-group" id="filterValueContainer">
+                <label for="filterValue">Filter Value:</label>
+                <select name="filterValue" id="filterValue" class="HR-form-control">
+                    <!-- Populate these options dynamically or hardcode them -->
+                    <!-- Example for Status -->
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+                <input type="text" name="filterValue" id="filterValueInput" class="HR-form-control" style="display:none;" placeholder="Enter User ID" />
             </div>
-            <button type="submit" class="HR-btn-submit">Filter</button>
+            <button type="button" id="generateReport" class="HR-btn-submit">Generate Report</button>
+            <button type="button" id="clearFilters" class="HR-btn-clear">Clear Filters</button>
         </form>
+
 
         <div class="HR-table-wrapper">
             <table class="HR-table HR-claim-history-table">
@@ -109,32 +117,100 @@
 </div>
 
 <!-- JavaScript Section -->
-
 <script>
-    // When a filter is applied
-    // Update the report generation form based on current filters
-    $('#generateReportButton').on('click', function () {
-        const filterType = $('#filterTypeInput').val(); // Get the current filter type
-        const filterValue = $('#filterValueInput').val(); // Get the current filter value
-
-        console.log("Generating report with filter type:", filterType, "and filter value:", filterValue);
-
-        // Construct the report URL with the current filters
-        const reportUrl = `/ControllerName/GenerateReport?filterType=${filterType}&filterValue=${filterValue}`;
-
-        // Redirect to the URL for report generation (downloads the file)
-        window.location.href = reportUrl;
+    $(document).ready(function () {
+        // Initialize event listeners
+        initializeEventListeners();
     });
 
-    // Optional: If you apply filters dynamically and need to track them in hidden fields
-    $('#applyFiltersButton').on('click', function () {
-        const filterType = $('#filterType').val();
-        const filterValue = $('#filterValue').val();
+    // Function to initialize event listeners
+    function initializeEventListeners() {
+        // When the report generation button is clicked, synchronize the filters and generate the report
+        $('#generateReport').on('click', function (e) {
+            e.preventDefault(); // Prevent the default form submission
 
-        // Update hidden fields for report generation
-        $('#hiddenFilterType').val(filterType);
-        $('#hiddenFilterValue').val(filterValue);
-    });
+            // Get selected filter values
+            const filterType = $('#filterType').val();
+            const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
+
+            // Make an AJAX call to generate the report
+            $.ajax({
+                url: '@Url.Action("GenerateReport", "HR")',
+                type: 'GET',
+                data: {
+                    filterType: filterType,
+                    filterValue: filterValue
+                },
+                success: function (response) {
+                    // Create a temporary link element to download the file
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(new Blob([response], { type: 'text/csv' }));
+                    link.download = `ClaimsReport_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error generating report:", error);
+                    alert("An error occurred while generating the report. Please try again.");
+                }
+            });
+        });
+
+        $('#filterForm').on('change', 'select, input', function () {
+            applyFilters();  // Apply filters when a dropdown value changes
+        });
+
+        $('#clearFilters').on('click', function () {
+            $('#filterType').val('');
+            $('#filterValue').val('').hide();
+            $('#filterValueInput').val('').hide();
+            applyFilters();
+        });
+
+        function applyFilters() {
+            const filterType = $('#filterType').val();
+            const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
+
+            // Send AJAX request to fetch filtered claims
+            $.ajax({
+                url: '@Url.Action("HRPageView", "HR")',
+                method: 'GET',
+                data: { filterType, filterValue },
+                success: function (data) {
+                    // Replace the claims table with the new data
+                    $('.HR-claim-history-table tbody').html($(data).find('.HR-claim-history-table tbody').html());
+                },
+                error: function (err) {
+                    console.error('Error fetching claims:', err);
+                }
+            });
+        }
+
+        // Handle filter type change to dynamically update the filter values
+        $('#filterType').on('change', function () {
+            const filterType = $(this).val();
+            const $filterValue = $('#filterValue');
+            const $filterValueInput = $('#filterValueInput');
+
+            if (filterType === 'status') {
+                $filterValue.show();
+                $filterValueInput.hide();
+                $filterValue.html(`
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                    `);
+            } else if (filterType === 'userid') {
+                $filterValue.hide();
+                $filterValueInput.show();
+            } else {
+                $filterValue.hide();
+                $filterValueInput.hide();
+            }
+        });
+    }
+
     // Function to edit user details
     function editUser(userId) {
         const name = prompt("Enter new name:");
@@ -144,7 +220,18 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ LecturerId: userId, Name: name, Email: email })
-            }).then(() => window.location.reload());
+            }).then(response => {
+                if (response.ok) {
+                    alert("User details updated successfully.");
+                    window.location.reload();
+                } else {
+                    alert("Failed to update user details.");
+                }
+            }).catch(error => {
+                console.error("Error updating user details:", error);
+                alert("An error occurred while updating user details.");
+            });
         }
     }
 </script>
+

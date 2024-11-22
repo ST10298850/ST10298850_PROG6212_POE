@@ -28,10 +28,6 @@ namespace ST10298850_PROG6212_POE.Controllers
             {
                 switch (filterType.ToLower())
                 {
-                    case "date":
-                        if (DateTime.TryParse(filterValue, out var filterDate))
-                            claims = claims.Where(c => c.SubmissionDate.Date == filterDate.Date);
-                        break;
                     case "status":
                         claims = claims.Where(c => c.Status.Contains(filterValue));
                         break;
@@ -49,6 +45,8 @@ namespace ST10298850_PROG6212_POE.Controllers
             ViewBag.Claims = await claims.Include(c => c.Lecturer).ToListAsync();
             return View(users);
         }
+
+
 
         // Update User Information
         [HttpPost]
@@ -69,49 +67,39 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             return RedirectToAction("HRPageView");
         }
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GenerateReport(string filterType, string filterValue)
         {
-            // Log the filter values to ensure they are being received correctly
-            Console.WriteLine($"Received filterType: {filterType}, filterValue: {filterValue}");
-
-            // Ensure that filterType and filterValue are correctly used
             var claims = _context.Claims.AsQueryable();
 
             if (!string.IsNullOrEmpty(filterType) && !string.IsNullOrEmpty(filterValue))
             {
                 switch (filterType.ToLower())
                 {
-                    case "date":
-                        if (DateTime.TryParse(filterValue, out var filterDate))
-                            claims = claims.Where(c => c.SubmissionDate.Date == filterDate.Date);
-                        break;
                     case "status":
-                        claims = claims.Where(c => c.Status.Contains(filterValue));
+                        claims = claims.Where(c => c.Status == filterValue);
                         break;
                     case "userid":
                         if (int.TryParse(filterValue, out var userId))
-                            claims = claims.Where(c => c.LecturerId == userId);  // Assuming `LecturerId` is the field to filter by
+                            claims = claims.Where(c => c.LecturerId == userId);
                         break;
+                    default:
+                        return BadRequest("Invalid filter type.");
                 }
             }
 
             var filteredClaims = await claims.Include(c => c.Lecturer).ToListAsync();
 
-            // Convert claims to CSV
+            // Generate CSV
             var csvContent = new StringBuilder();
             csvContent.AppendLine("Claim ID,User ID,Status,Submission Date");
-
             foreach (var claim in filteredClaims)
             {
                 csvContent.AppendLine($"{claim.ClaimId},{claim.LecturerId},{claim.Status},{claim.SubmissionDate:yyyy-MM-dd}");
             }
 
-            // Return as downloadable file
             var csvBytes = Encoding.UTF8.GetBytes(csvContent.ToString());
-            var csvFileName = $"ClaimsReport_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
-
-            return File(csvBytes, "text/csv", csvFileName);
+            return File(csvBytes, "text/csv", $"ClaimsReport_{DateTime.Now:yyyyMMddHHmmss}.csv");
         }
     }
 }
