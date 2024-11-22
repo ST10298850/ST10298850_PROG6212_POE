@@ -103,6 +103,8 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="HR-table-container">
         <div class="HR-edit-user-form">
             <h2>Edit User</h2>
             <form id="editUserForm">
@@ -115,12 +117,21 @@
                     <label for="editUserEmail">Email:</label>
                     <input type="email" id="editUserEmail" class="HR-form-control" />
                 </div>
+                <div class="HR-form-group">
+                    <label for="editUserDepartment">Department:</label>
+                    <input type="text" id="editUserDepartment" class="HR-form-control" />
+                </div>
+                <div class="HR-form-group">
+                    <label for="editUserCampus">Campus:</label>
+                    <input type="text" id="editUserCampus" class="HR-form-control" />
+                </div>
                 <button type="button" onclick="saveUser()" class="HR-btn-submit">Save</button>
                 <button type="button" onclick="cancelEdit()" class="HR-btn-clear">Cancel</button>
             </form>
-        </div>
+            </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         // Initialize event listeners
@@ -211,10 +222,10 @@
                 $filterValue.show();
                 $filterValueInput.hide();
                 $filterValue.html(`
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
-                    `);
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            `);
             } else if (filterType === 'userid') {
                 $filterValue.hide();
                 $filterValueInput.show();
@@ -225,23 +236,42 @@
         });
     }
 
-    function editUser(userId, name, email) {
-        $('#editUserId').val(userId);
-        $('#editUserName').val(name);
-        $('#editUserEmail').val(email);
-        $('.HR-edit-user-form').show();
+    function editUser(userId) {
+        $.ajax({
+            url: '@Url.Action("GetLecturerDetails", "HR")',
+            type: 'GET',
+            data: { lecturerId: userId },
+            success: function (lecturer) {
+                $('#editUserId').val(lecturer.lecturerId);
+                $('#editUserName').val(lecturer.name);
+                $('#editUserEmail').val(lecturer.email);
+                $('#editUserDepartment').val(lecturer.department);
+                $('#editUserCampus').val(lecturer.campus);
+                $('.HR-edit-user-form').show();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching lecturer details:", error);
+                alert("An error occurred while fetching lecturer details. Please try again.");
+            }
+        });
     }
+
 
     function saveUser() {
         try {
             const userId = $('#editUserId').val();
             const name = $('#editUserName').val();
             const email = $('#editUserEmail').val();
-            if (name && email) {
+            const department = $('#editUserDepartment').val();
+            const campus = $('#editUserCampus').val();
+
+            if (name && email && department && campus) {
                 const formData = new URLSearchParams();
                 formData.append('userID', userId);
                 formData.append('name', name);
                 formData.append('email', email);
+                formData.append('department', department);
+                formData.append('campus', campus);
 
                 fetch('/HR/UpdateUser', {
                     method: 'POST',
@@ -266,6 +296,7 @@
             alert("An unexpected error occurred. Please try again.");
         }
     }
+
 
 
 

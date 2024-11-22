@@ -14,5 +14,11 @@ namespace ST10298850_PROG6212_POE.Controllers
         {
             return View();
         }
+
+        public IActionResult HRSignOut()
+        {
+            // Logic for HR sign-out (e.g., redirect to sign-in page)
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

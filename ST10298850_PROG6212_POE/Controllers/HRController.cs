@@ -60,9 +60,41 @@ namespace ST10298850_PROG6212_POE.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetLecturerDetails(int lecturerId)
+        {
+            try
+            {
+                var lecturer = await _context.Lecturers
+                    .Where(l => l.LecturerId == lecturerId)
+                    .Select(l => new
+                    {
+                        l.LecturerId,
+                        l.Name,
+                        l.Email,
+                        l.Department,
+                        l.Campus
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (lecturer == null)
+                {
+                    return NotFound("Lecturer not found.");
+                }
+
+                return Ok(lecturer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching lecturer details.");
+                return StatusCode(500, "Internal server error. Please try again later.");
+            }
+        }
+
+
         // Update User Information
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(int userID, string name, string email)
+        public async Task<IActionResult> UpdateUser(int userID, string name, string email, string department, string campus)
         {
             if (ModelState.IsValid)
             {
@@ -71,9 +103,11 @@ namespace ST10298850_PROG6212_POE.Controllers
                     var user = await _context.Lecturers.FindAsync(userID);
                     if (user != null)
                     {
-                        // Update only the Name and Email fields
+                        // Update the fields
                         user.Name = name;
                         user.Email = email;
+                        user.Department = department;
+                        user.Campus = campus;
                         await _context.SaveChangesAsync();
                         return Ok(); // Return Ok status
                     }
