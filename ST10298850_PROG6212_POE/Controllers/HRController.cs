@@ -67,6 +67,7 @@ namespace ST10298850_PROG6212_POE.Controllers
 
             return RedirectToAction("HRPageView");
         }
+
         [HttpGet]
         public async Task<IActionResult> GenerateReport(string filterType, string filterValue)
         {
@@ -88,18 +89,47 @@ namespace ST10298850_PROG6212_POE.Controllers
                 }
             }
 
-            var filteredClaims = await claims.Include(c => c.Lecturer).ToListAsync();
+            var filteredClaims = await claims
+                .Include(c => c.Lecturer)
+                .Include(c => c.Coordinator)
+                .Include(c => c.Documents)
+                .ToListAsync();
 
             // Generate CSV
             var csvContent = new StringBuilder();
-            csvContent.AppendLine("Claim ID,User ID,Status,Submission Date");
+            csvContent.AppendLine("Claim ID,User ID,Status,Submission Date,Lecturer Name,Hourly Rate,Department,Campus,Hours Worked,Overtime Worked,Total Hours,Regular Pay,Overtime Pay,Total Pay,Notes,Coordinator Name,Verification Date,Documents");
+
             foreach (var claim in filteredClaims)
             {
-                csvContent.AppendLine($"{claim.ClaimId},{claim.LecturerId},{claim.Status},{claim.SubmissionDate:yyyy-MM-dd}");
+                var documents = string.Join(";", claim.Documents.Select(d => d.DocumentName));
+                var coordinator = claim.Coordinator;
+                var lecturer = claim.Lecturer;
+
+                var claimDetails = new
+                {
+                    LecturerId = lecturer?.LecturerId,
+                    FullName = lecturer?.Name ?? "NA",
+                    HourlyRate = claim.HourlyRate.ToString("C"),
+                    Department = lecturer?.Department ?? "NA",
+                    Campus = lecturer?.Campus ?? "NA",
+                    HoursWorked = claim.HoursWorked,
+                    OvertimeWorked = claim.OvertimeWorked,
+                    TotalHours = claim.HoursWorked + claim.OvertimeWorked,
+                    RegularPay = (claim.HoursWorked * claim.HourlyRate).ToString("C"),
+                    OvertimePay = (claim.OvertimeWorked * (claim.HourlyRate * 1.5M)).ToString("C"),
+                    TotalPay = ((claim.HoursWorked * claim.HourlyRate) + (claim.OvertimeWorked * (claim.HourlyRate * 1.5M))).ToString("C"),
+                    Notes = claim.Notes,
+                    CoordinatorName = coordinator?.Name ?? "NA",
+                    VerificationDate = coordinator?.VerificationDate.ToString() ?? "NA"
+                };
+
+                csvContent.AppendLine($"{claim.ClaimId},{claim.LecturerId},{claim.Status},{claim.SubmissionDate:yyyy-MM-dd},{claimDetails.FullName},{claimDetails.HourlyRate},{claimDetails.Department},{claimDetails.Campus},{claimDetails.HoursWorked},{claimDetails.OvertimeWorked},{claimDetails.TotalHours},{claimDetails.RegularPay},{claimDetails.OvertimePay},{claimDetails.TotalPay},{claimDetails.Notes},{claimDetails.CoordinatorName},{claimDetails.VerificationDate},{documents}");
             }
 
             var csvBytes = Encoding.UTF8.GetBytes(csvContent.ToString());
             return File(csvBytes, "text/csv", $"ClaimsReport_{DateTime.Now:yyyyMMddHHmmss}.csv");
         }
+
+
     }
 }

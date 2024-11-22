@@ -18,8 +18,6 @@
             <div class="HR-form-group" id="filterValueContainer">
                 <label for="filterValue">Filter Value:</label>
                 <select name="filterValue" id="filterValue" class="HR-form-control">
-                    <!-- Populate these options dynamically or hardcode them -->
-                    <!-- Example for Status -->
                     <option value="Pending">Pending</option>
                     <option value="Approved">Approved</option>
                     <option value="Rejected">Rejected</option>
@@ -29,7 +27,6 @@
             <button type="button" id="generateReport" class="HR-btn-submit">Generate Report</button>
             <button type="button" id="clearFilters" class="HR-btn-clear">Clear Filters</button>
         </form>
-
 
         <div class="HR-table-wrapper">
             <table class="HR-table HR-claim-history-table">
@@ -74,7 +71,6 @@
     <div class="HR-table-container">
         <h2>Users</h2>
         <div class="HR-table-wrapper">
-            <!-- Add wrapper for scrolling -->
             <table class="HR-table HR-users-table">
                 <thead>
                     <tr>
@@ -94,7 +90,7 @@
                                 <td>@user.Name</td>
                                 <td>@user.Email</td>
                                 <td>
-                                    <button onclick="editUser(@user.LecturerId)" class="HR-btn-edit">Edit</button>
+                                    <button onclick="editUser(@user.LecturerId, '@user.Name', '@user.Email')" class="HR-btn-edit">Edit</button>
                                 </td>
                             </tr>
                         }
@@ -108,41 +104,42 @@
                 </tbody>
             </table>
         </div>
+        <!-- Edit User Form -->
+        <div class="HR-edit-user-form"">
+            <h2>Edit User</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId" />
+                <div class="HR-form-group">
+                    <label for="editUserName">Name:</label>
+                    <input type="text" id="editUserName" class="HR-form-control" />
+                </div>
+                <div class="HR-form-group">
+                    <label for="editUserEmail">Email:</label>
+                    <input type="email" id="editUserEmail" class="HR-form-control" />
+                </div>
+                <button type="button" onclick="saveUser()" class="HR-btn-submit">Save</button>
+                <button type="button" onclick="cancelEdit()" class="HR-btn-clear">Cancel</button>
+            </form>
+        </div>
     </div>
-    <form method="get" action="@Url.Action("GenerateReport", "HR")" target="_blank">
-        <input type="hidden" name="filterType" id="hiddenFilterType" value="" />
-        <input type="hidden" name="filterValue" id="hiddenFilterValue" value="" />
-        <button type="submit" class="HR-btn-generate-report">Generate Report</button>
-    </form>
 </div>
 
-<!-- JavaScript Section -->
 <script>
     $(document).ready(function () {
         // Initialize event listeners
         initializeEventListeners();
     });
 
-    // Function to initialize event listeners
     function initializeEventListeners() {
-        // When the report generation button is clicked, synchronize the filters and generate the report
         $('#generateReport').on('click', function (e) {
-            e.preventDefault(); // Prevent the default form submission
-
-            // Get selected filter values
+            e.preventDefault();
             const filterType = $('#filterType').val();
             const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
-
-            // Make an AJAX call to generate the report
             $.ajax({
                 url: '@Url.Action("GenerateReport", "HR")',
                 type: 'GET',
-                data: {
-                    filterType: filterType,
-                    filterValue: filterValue
-                },
+                data: { filterType, filterValue },
                 success: function (response) {
-                    // Create a temporary link element to download the file
                     const link = document.createElement('a');
                     link.href = window.URL.createObjectURL(new Blob([response], { type: 'text/csv' }));
                     link.download = `ClaimsReport_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
@@ -158,7 +155,7 @@
         });
 
         $('#filterForm').on('change', 'select, input', function () {
-            applyFilters();  // Apply filters when a dropdown value changes
+            applyFilters();
         });
 
         $('#clearFilters').on('click', function () {
@@ -171,14 +168,11 @@
         function applyFilters() {
             const filterType = $('#filterType').val();
             const filterValue = filterType === 'userid' ? $('#filterValueInput').val() : $('#filterValue').val();
-
-            // Send AJAX request to fetch filtered claims
             $.ajax({
                 url: '@Url.Action("HRPageView", "HR")',
                 method: 'GET',
                 data: { filterType, filterValue },
                 success: function (data) {
-                    // Replace the claims table with the new data
                     $('.HR-claim-history-table tbody').html($(data).find('.HR-claim-history-table tbody').html());
                 },
                 error: function (err) {
@@ -187,12 +181,10 @@
             });
         }
 
-        // Handle filter type change to dynamically update the filter values
         $('#filterType').on('change', function () {
             const filterType = $(this).val();
             const $filterValue = $('#filterValue');
             const $filterValueInput = $('#filterValueInput');
-
             if (filterType === 'status') {
                 $filterValue.show();
                 $filterValueInput.hide();
@@ -211,10 +203,17 @@
         });
     }
 
-    // Function to edit user details
-    function editUser(userId) {
-        const name = prompt("Enter new name:");
-        const email = prompt("Enter new email:");
+    function editUser(userId, name, email) {
+        $('#editUserId').val(userId);
+        $('#editUserName').val(name);
+        $('#editUserEmail').val(email);
+        $('.HR-edit-user-form').show();
+    }
+
+    function saveUser() {
+        const userId = $('#editUserId').val();
+        const name = $('#editUserName').val();
+        const email = $('#editUserEmail').val();
         if (name && email) {
             fetch('/HR/UpdateUser', {
                 method: 'POST',
@@ -233,5 +232,8 @@
             });
         }
     }
-</script>
 
+    function cancelEdit() {
+        $('.HR-edit-user-form').hide();
+    }
+</script>
